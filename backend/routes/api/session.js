@@ -54,7 +54,10 @@ router.post(
         }
 
         const safeUser = {
+            //add first name and last name
             id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
             email: user.email,
             username: user.username,
         };
@@ -91,7 +94,10 @@ router.get(
         const { user } = req;
         if (user) {
             const safeUser = {
+                //add first name and last name
                 id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
                 username: user.username,
             };
