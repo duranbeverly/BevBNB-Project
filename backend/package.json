@@ -10,8 +10,7 @@
     "start": "per-env",
     "start:development": "nodemon ./bin/www",
     "start:production": "node ./bin/www",
-    "build": "node psql-setup-script.js",
-    "drop-db": "sequelize --prefix backend db:seed:undo:all && sequelize --prefix backend db:migrate:undo:all && sequelize --prefix backend db:migrate:undo:all"
+    "build": "node psql-setup-script.js"
   },
   "keywords": [],
   "author": "",
