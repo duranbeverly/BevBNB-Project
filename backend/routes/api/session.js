@@ -87,7 +87,7 @@ router.delete(
 // backend/routes/api/session.js
 // ...
 
-// Restore session user
+// Restore session user returns null if no one is logged in
 router.get(
     '/',
     (req, res) => {
