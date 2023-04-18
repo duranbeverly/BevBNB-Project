@@ -58,7 +58,9 @@ router.get('/', async (req, res, next) => {
                 preview: true
             }
         })
-        spots[i].previewImage = previewUrl.url;
+        if (previewUrl) { // added an if statement to check if previewUrl is truthy
+            spots[i].previewImage = previewUrl.url;
+        }
     }
 
 
@@ -68,17 +70,19 @@ router.get('/', async (req, res, next) => {
         let allRatings = await Review.findAll({ //here you get all the stars
             attributes: ['stars'],
             where: {
-                spotId: spots[i].id,
-                preview: true
+                spotId: spots[i].id
             }
         })
 
         let reviewNum = allRatings.length
 
-        for (let j = 0; j < allRatings.length; j++) {
-            sum += allRatings[j].stars
+
+        if (reviewNum > 0) {
+            for (let j = 0; j < allRatings.length; j++) {
+                sum += allRatings[j].stars
+            }
+            spots[i].avgRating = (sum / reviewNum)
         }
-        spots[i].avgRating = (sum / reviewNum)
     }
 
     res.json({ spots })
@@ -86,19 +90,10 @@ router.get('/', async (req, res, next) => {
 
 
 //get all the spots that belong to current logged in user
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
 
     const { user } = req;
-    if (user) {
-        const safeUser = {
-            //add first name and last name
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            username: user.username,
-        };
-    }
+
     let spotsByCurrentUser = await Spot.findAll({
         where: {
             ownerId: user.id
@@ -114,8 +109,10 @@ router.get('/current', async (req, res, next) => {
                 preview: true
             }
         })
+        if (previewUrl) {
+            spotsByCurrentUser[i].previewImage = previewUrl.url;
 
-        spotsByCurrentUser[i].previewImage = previewUrl.url;
+        }
     }
 
     for (let i = 0; i < spotsByCurrentUser.length; i++) { //for each spot get all the stars for that spot
@@ -130,17 +127,19 @@ router.get('/current', async (req, res, next) => {
 
         let reviewNum = allRatings.length
 
-        for (let j = 0; j < allRatings.length; j++) {
-            sum += allRatings[j].stars
+        if (reviewNum > 0) {
+            for (let j = 0; j < allRatings.length; j++) {
+                sum += allRatings[j].stars
+            }
+            spotsByCurrentUser[i].avgRating = (sum / reviewNum)
         }
-        spotsByCurrentUser[i].avgRating = (sum / reviewNum)
 
     }
     res.json({ spotsByCurrentUser })
 })
 
 
-
+//get details of a spot from an id
 
 router.get('/:spotId', async (req, res, next) => {
     let spotId = req.params.spotId;
@@ -189,7 +188,7 @@ router.get('/:spotId', async (req, res, next) => {
 })
 
 
-
+//create a spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     // try {
     const { address, city, state, country, lat, lng, name, description, price } = req.body;
@@ -228,7 +227,9 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 }
 );
 
-router.post('/:spotId/images', async (req, res, next) => {
+//add an image to a spot based on the spots id
+
+router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     let { url, preview } = req.body;
     let id = req.params.spotId;
 
@@ -250,9 +251,10 @@ router.post('/:spotId/images', async (req, res, next) => {
     res.status(200).json(newImg);
 });
 
-
+//edit a spot
 router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     let { address, city, state, country, lat, lng, name, description, price } = req.body;
+    const { user } = req
     let id = req.params.spotId;
     let spotToEdit = await Spot.findByPk(id)
 
@@ -262,6 +264,11 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         });
     }
 
+    if (spotToEdit.ownerId !== user.id) {
+        return res.status(401).json({
+            "message": "You are not authorized to edit this spot"
+        });
+    }
     spotToEdit.address = address
     spotToEdit.city = city
     spotToEdit.state = state
@@ -276,5 +283,27 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     res.json(spotToEdit)
 })
 
+router.delete(':spotId', requireAuth, async (req, res) => {
+    const { user } = req
+    const id = req.params.spotId
+    let spot = await Spot.findByPk(id)
+
+    if (!spotToEdit) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found"
+        });
+    }
+
+    if (spotToEdit.ownerId !== user.id) {
+        return res.status(401).json({
+            "message": "You are not authorized to edit this spot"
+        });
+    }
+
+    await spot.destroy()
+    res.json({
+        "message": "Successfully deleted"
+    })
+})
 
 module.exports = router;
