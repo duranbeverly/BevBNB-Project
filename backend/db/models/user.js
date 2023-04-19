@@ -20,11 +20,21 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         otherKey: 'spotId'
       })
+
+      User.hasMany(models.Review, {
+        foreignKey: 'userId'
+      })
     }
   };
 
   User.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
+      },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
