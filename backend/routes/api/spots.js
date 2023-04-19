@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, SpotImage, User, Review, ReviewImage } = require('../../db/models')
+const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models')
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 // const { restoreUser } = require('../../utils/auth');
 // const { User } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { Op } = require('sequelize');
 
 
 //this wil check if your post a spot/create a spot is valid
@@ -55,11 +56,93 @@ const validateReview = [
     handleValidationErrors,
 
 ]
+
+const validateDate = [ //not advisable for checking endate is before or on startDate
+    check('startDate')
+        .exists({ checkFalsy: true })
+        .withMessage('Start date must exist'),
+    check('endDate')
+        .exists({ checkFalsy: true })
+        .withMessage('End date must exist'),
+    handleValidationErrors
+]
+
+const validateQuery = [
+    check('page')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage("Page must be greater than or equal to 1"),
+    check('size')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage("Size must be greater than or equal to 1"),
+    check('minLat')
+        .optional()
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Latitude is not valid.'),
+    check('maxLat')
+        .optional()
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Latitude is not valid.'),
+    check('minLng')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Longitude is not valid.'),
+    check('maxLng')
+        .optional()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Longitude is not valid.'),
+    check('minPrice')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Minimum price must be greater than or equal to 0"),
+    check('maxPrice')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage("Maximum price must be greater than or equal to 0"),
+    handleValidationErrors
+
+]
 //get all spots and add the preview image
 
-router.get('/', async (req, res, next) => {
+router.get('/', validateQuery, async (req, res, next) => {
+    let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
+    const where = {};
+    let pagination = {};
+
+    if (!page || page > 10) page = 1;
+    if (!size || size > 20) size = 20;
+
+    pagination.limit = size;
+    pagination.offset = size * (page - 1)
+
+    if (minLat && !isNaN(minLat)) {
+        where.lat = { [Op.gt]: parseFloat(minLat) } //all should be greater than  where: {lat: {[Op.gt]: minLat} }
+    }
+
+    if (maxLat && !isNaN(maxLat)) {
+        where.lat = { [Op.lt]: parseFloat(maxLat) }
+    }
+    if (minLng && !isNaN(minLng)) {
+        where.lng = { [Op.gt]: parseFloat(minLng) }
+    }
+
+    if (maxLng && !isNaN(maxLng)) {
+        where.lng = { [Op.lt]: parseFloat(maxLng) }
+    }
+
+    if (minPrice && !isNaN(minPrice) && minPrice >= 0) {
+        where.price = { [Op.gt]: parseFloat(minPrice) }
+    }
+
+    if (maxPrice && !isNaN(maxPrice) && maxPrice >= 0) {
+        where.price = { [Op.lt]: parseFloat(maxPrice) }
+    }
+
     let spots = await Spot.findAll({
-        raw: true
+        raw: true,
+        where,
+        ...pagination
     })
 
     for (let i = 0; i < spots.length; i++) {
@@ -88,16 +171,15 @@ router.get('/', async (req, res, next) => {
 
         let reviewNum = allRatings.length
 
-
         if (reviewNum > 0) {
             for (let j = 0; j < allRatings.length; j++) {
                 sum += allRatings[j].stars
             }
-            spots[i].avgRating = (sum / reviewNum)
+            spots[i].avgRating = (sum / reviewNum).toFixed(2) //prevent from getting long decimals
         }
     }
 
-    res.json({ spots })
+    res.json({ spots, page, size })
 })
 
 
@@ -377,6 +459,114 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     })
 
     res.json(newReview)
+})
+
+//get all bookings for a spot based on the spots id
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+    let id = req.params.spotId;
+    let { user } = req
+    let spot = await Spot.findByPk(id)
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+    let allBooks = await Booking.findAll()
+
+    let Book = []
+    for (let books of allBooks) {
+        books = books.toJSON()
+        Book.push(books)
+    }
+    console.log(Book)
+
+
+    if (user.id === spot.ownerId) { //if you are the owner do this
+
+        let allBookings = await Booking.findAll({
+            where: { //if you are the owner you want to get everyone that is booking with the spot id provided
+                spotId: spot.id
+            },
+            include: { model: User, attributes: ['id', 'firstName', 'lastName'] }
+        })
+        res.json({ allBookings })
+    } else { //if you don't own the spot then you want to get the bookings for yourself for that spot
+        let Bookings = await Booking.findAll({
+            where: {
+                userId: user.id,
+                spotId: spot.id
+            },
+            attributes: ['spotId', 'startDate', 'endDate']
+        })
+        res.json({ Bookings })
+    }
+})
+
+router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, next) => {
+    const { user } = req;
+    let id = req.params.spotId;
+    let spot = await Spot.findByPk(id);
+    let { startDate, endDate } = req.body;
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+
+    //look for the bookings that have either the same start date or have
+
+    const overlappingBooking = await Booking.findOne({
+        where: {
+            spotId: id,
+            [Op.or]: [
+                {
+                    startDate: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                },
+                {
+                    endDate: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                }
+            ]
+        }
+    });
+
+    if (new Date(endDate) <= new Date(startDate)) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "endDate": "endDate cannot be on or before startDate"
+            }
+        });
+    }
+
+    if (overlappingBooking) {
+        return res.status(403).json({
+            "message": "Sorry, this spot is already booked for the specified dates",
+            "errors": {
+                "startDate": "Start date conflicts with an existing booking",
+                "endDate": "End date conflicts with an existing booking"
+            }
+        });
+    }
+
+    if (user.id != spot.ownerId) {
+        let newBooking = await Booking.create({
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+            userId: user.id,
+            spotId: spot.id
+        })
+
+        res.json(newBooking)
+
+    } else {
+        res.status(403).json({ message: "You can't book your own place" })
+    }
 })
 
 module.exports = router;

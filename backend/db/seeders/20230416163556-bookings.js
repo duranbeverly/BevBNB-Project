@@ -22,21 +22,39 @@ module.exports = {
             {
                 spotId: 1,
                 userId: 3,
-                startDate: '2023-08-01',
-                endDate: '2023-08-10'
+                startDate: new Date('2022-08-01'),
+                endDate: new Date('2022-08-10')
             },
             {
                 spotId: 2,
                 userId: 4,
-                startDate: '2023-09-01',
-                endDate: '2023-09-10'
+                startDate: new Date('2022-09-01'),
+                endDate: new Date('2022-09-10')
             },
             {
                 spotId: 3,
                 userId: 1,
-                startDate: '2023-10-01',
-                endDate: '2023-10-10'
+                startDate: new Date('2022-10-01'),
+                endDate: new Date('2022-10-10')
             },
+            {
+                spotId: 2,
+                userId: 3,
+                startDate: new Date('2022-11-01'),
+                endDate: new Date('2022-11-10')
+            },
+            {
+                spotId: 1,
+                userId: 2,
+                startDate: new Date('2022-10-04'),
+                endDate: new Date('2022-10-15')
+            },
+            {
+                spotId: 3,
+                userId: 1,
+                startDate: new Date('2022-10-01'),
+                endDate: new Date('2022-10-10')
+            }
 
         ], {}) //should this be options object?
     },
