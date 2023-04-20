@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Spot, SpotImage, User, Review, ReviewImage, Booking } = require('../../db/models')
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
-// const { restoreUser } = require('../../utils/auth');
-// const { User } = require('../../db/models');
 
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -103,7 +101,7 @@ const validateQuery = [
     handleValidationErrors
 
 ]
-//get all spots and add the preview image
+//get all spots and add the preview image + add pagination and search options
 
 router.get('/', validateQuery, async (req, res, next) => {
     let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query
@@ -455,14 +453,6 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             "message": "Spot couldn't be found"
         })
     }
-    let allBooks = await Booking.findAll()
-
-    let Book = []
-    for (let books of allBooks) {
-        books = books.toJSON()
-        Book.push(books)
-    }
-    console.log(Book)
 
 
     if (user.id === spot.ownerId) { //if you are the owner do this
@@ -473,7 +463,15 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             },
             include: { model: User, attributes: ['id', 'firstName', 'lastName'] }
         })
+
+        if (allBookings.length <= 0) { //if no bookings exist throw an error
+            return res.status(404).json({
+                "message": "Booking couldn't be found"
+            })
+        }
+
         res.json({ allBookings })
+
     } else { //if you don't own the spot then you want to get the bookings for yourself for that spot
         let Bookings = await Booking.findAll({
             where: {
@@ -482,9 +480,18 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             },
             attributes: ['spotId', 'startDate', 'endDate']
         })
+
+        if (Bookings.length <= 0) { //if no bookings exist throw an error
+            return res.status(404).json({
+                "message": "Booking couldn't be found"
+            })
+        }
+
         res.json({ Bookings })
     }
 })
+
+//post edit a booking for a spot id
 
 router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, next) => {
     const { user } = req;
@@ -545,13 +552,14 @@ router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, nex
             spotId: spot.id
         })
 
-        res.json(newBooking)
+        res.json(newBooking) //here we send all the boookings for this spot
 
     } else {
         res.status(403).json({ message: "You can't book your own place" })
     }
 })
 
+//delete a booking
 router.delete('/:spotId', requireAuth, async (req, res) => {
     let { user } = req;
     let id = req.params.spotId;

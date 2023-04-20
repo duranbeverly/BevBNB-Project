@@ -111,6 +111,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     res.json({ id: newImage.id, url: newImage.url })
 })
 
+//edit a review
 router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
     let { user } = req;
     let id = req.params.reviewId;
@@ -121,7 +122,7 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
         return res.status(401).json({ "message": "You are not authorized." })
     }
 
-    if (!review) {
+    if (!reviewFound) {
         return res.status(404).json({
             "message": "Review couldn't be found"
         })
