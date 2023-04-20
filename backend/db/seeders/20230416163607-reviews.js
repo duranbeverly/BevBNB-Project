@@ -30,7 +30,7 @@ module.exports = {
                 spotId: 2,//the waterfall bungalow
                 userId: 3,
                 review: ' Very unique home and great location. Would like to visit again but higher price will delay that a bit.',
-                stars: 3
+                stars: 4
             },
             {
                 spotId: 3, //the adobe house in NM
@@ -38,6 +38,18 @@ module.exports = {
                 review: 'As a host myself it could have been much better. Didn"t get free champagne with my breakfast',
                 stars: 2
             },
+            {
+                spotId: 3, //the adobe house in NM
+                userId: 4,
+                review: ' This was so cute! Great weekend getaway and true to the culture of NM.',
+                stars: 5
+            },
+            {
+                spotId: 1, //the dome treehouse
+                userId: 2,
+                review: 'The host was awful.This guy clearly only cares about money',
+                stars: 1
+            }
 
         ], {})
     },

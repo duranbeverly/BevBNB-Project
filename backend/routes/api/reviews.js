@@ -72,6 +72,7 @@ router.get('/current', requireAuth, async (req, res) => {
     res.json({ Reviews })
 })
 
+//add an image to a review based on the reviews id
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     let { user } = req;
     let id = req.params.reviewId
@@ -84,7 +85,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         })
     }
 
-    if (!user.id === review.userId) {
+    if (user.id !== review.userId) {
         return res.status(404).json({
             "message": "You are not authorized to add an image."
         })
@@ -107,7 +108,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         reviewId: review.id,
     })
 
-    res.json({ url: newImage.url })
+    res.json({ id: newImage.id, url: newImage.url })
 })
 
 router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
@@ -132,6 +133,30 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => 
     await reviewFound.save()
     res.json(reviewFound)
 
+})
+
+router.delete('/:reviewId', requireAuth, async (req, res) => {
+    let { user } = req
+    let id = req.params.reviewId;
+    let review = await Review.findByPk(id)
+
+    if (!review) {
+        res.status(404).json({
+            "message": "Review couldn't be found"
+        })
+    }
+
+    if (user.id === review.userId) {
+        await review.destroy()
+        res.json({
+            "message": "Successfully deleted"
+        })
+    }
+    else {
+        return res.status(404).json({
+            "message": "You are not authorized to delete this booking."
+        })
+    }
 })
 
 module.exports = router;

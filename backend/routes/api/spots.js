@@ -301,23 +301,6 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
     });
 
     res.status(201).json(spot);
-    // } catch (error) {
-    //     // if (error.name === 'SequelizeValidationError') {
-    //     // const errors = {};
-    //     // for (let i = 0; i < error.errors.length; i++) {
-    //     //     const e = error.errors[i];
-    //     //     errors[e.path] = e.message;
-    //     // }
-    //     const err = new Error('Bad Request');
-    //     err.status = 400;
-    //     // err.errors = errors;
-    //     return next(err);
-    //     // } else {
-    //     //     const err = new Error('Bad Request');
-    //     //     err.status = 500;
-    //     //     return next(err);
-    //     // }
-    // }
 }
 );
 
@@ -566,6 +549,30 @@ router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, nex
 
     } else {
         res.status(403).json({ message: "You can't book your own place" })
+    }
+})
+
+router.delete('/:spotId', requireAuth, async (req, res) => {
+    let { user } = req;
+    let id = req.params.spotId;
+    let spot = await Spot.findByPk(id)
+
+    if (!spot) {
+        return res.status(404).json({
+            "message": "Spot couldn't be found"
+        })
+    }
+
+    if (user.id === spot.ownerId) {
+        await spot.destroy()
+        res.json({
+            "message": "Successfully deleted"
+        })
+    } else {
+        return res.status(404).json({
+            "message": "You are not authorized to delete this booking."
+
+        })
     }
 })
 
