@@ -242,7 +242,7 @@ router.get('/:spotId', async (req, res, next) => {
         },
         include: [
             { model: SpotImage, attributes: ['id', 'url', 'preview'] },
-            { model: User, attributes: ['id', 'firstName', 'lastName'] },
+            { model: User, as: 'Owner', attributes: ['id', 'firstName', 'lastName'] },
         ]
     })
 
