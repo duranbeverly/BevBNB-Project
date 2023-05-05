@@ -30,7 +30,7 @@ body {
     background-color: rgba(135, 135, 135, 0.243);
 }
 
-label {
+.signuplabel {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
@@ -38,7 +38,7 @@ label {
 
 }
 
-button {
+.signupbutton {
     height: 3rem;
     background-color: rgb(255, 90, 95);
     color: white;

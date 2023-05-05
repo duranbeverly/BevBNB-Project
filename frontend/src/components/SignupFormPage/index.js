@@ -47,7 +47,7 @@ function SignupFormPage() {
             <div className="signupBox">
                 <h1 className="title">Sign Up</h1>
                 <form className="signupForm" onSubmit={handleSubmit}>
-                    <label>
+                    <label className="signuplabel" >
                         Email
                         <input
                             type="text"
@@ -57,7 +57,7 @@ function SignupFormPage() {
                         />
                     </label>
                     {errors.email && <p>{errors.email}</p>}
-                    <label>
+                    <label className="signuplabel" >
                         Username
                         <input
                             type="text"
@@ -67,7 +67,7 @@ function SignupFormPage() {
                         />
                     </label>
                     {errors.username && <p>{errors.username}</p>}
-                    <label>
+                    <label className="signuplabel" >
                         First Name
                         <input
                             type="text"
@@ -75,9 +75,9 @@ function SignupFormPage() {
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                         />
-                    </label>
+                    </label >
                     {errors.firstName && <p>{errors.firstName}</p>}
-                    <label>
+                    <label className="signuplabel" >
                         Last Name
                         <input
                             type="text"
@@ -87,7 +87,7 @@ function SignupFormPage() {
                         />
                     </label>
                     {errors.lastName && <p>{errors.lastName}</p>}
-                    <label>
+                    <label className="signuplabel" >
                         Password
                         <input
                             type="password"
@@ -97,7 +97,7 @@ function SignupFormPage() {
                         />
                     </label>
                     {errors.password && <p>{errors.password}</p>}
-                    <label>
+                    <label className="signuplabel" >
                         Confirm Password
                         <input
                             type="password"
@@ -107,7 +107,7 @@ function SignupFormPage() {
                         />
                     </label>
                     {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-                    <button type="submit">Sign Up</button>
+                    <button className="signupbutton" type="submit">Sign Up</button>
                 </form>
             </div>
         </>
