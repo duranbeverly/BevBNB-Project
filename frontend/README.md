@@ -1,3 +1,10 @@
+# BevBnB
+
+BevBnB is an online marketplace that connects people who want to rent out their homes with people who are looking for accommodations in specific locales
+
+Technology Used: React, Redux, Javascript, CSS
+Image:
+Launching locally:
 
 # Create React App Template
 
