@@ -27,31 +27,34 @@ function LoginFormModal() {
 
     return (
         <>
-            <h1>Log In</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username or Email
-                    <input
-                        type="text"
-                        value={credential}
-                        onChange={(e) => setCredential(e.target.value)}
-                        required
-                    />
-                </label>
-                <label>
-                    Password
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </label>
-                {errors.credential && (
-                    <p>{errors.credential}</p>
-                )}
-                <button type="submit">Log In</button>
-            </form>
+
+            <div className="signupBox">
+                <h1>Log In</h1>
+                <form className="signupForm" onSubmit={handleSubmit}>
+                    <label className="signuplabel">
+                        Username or Email
+                        <input
+                            type="text"
+                            value={credential}
+                            onChange={(e) => setCredential(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label className="signuplabel">
+                        Password
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </label>
+                    {errors.credential && (
+                        <p>{errors.credential}</p>
+                    )}
+                    <button className="signupbutton" type="submit">Log In</button>
+                </form>
+            </div>
         </>
     );
 }

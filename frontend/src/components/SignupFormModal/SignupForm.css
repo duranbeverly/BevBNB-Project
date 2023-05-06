@@ -24,11 +24,11 @@ h1 {
 
 }
 
-body {
+/* body {
     display: flex;
     justify-content: center;
     background-color: rgba(135, 135, 135, 0.243);
-}
+} */
 
 .signuplabel {
     display: flex;
