@@ -309,7 +309,6 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
     let id = req.params.spotId;
 
     let spot = await Spot.findByPk(id);
-    console.log(spot)
 
     if (!spot) {
         return res.status(404).json({

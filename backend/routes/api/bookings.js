@@ -42,7 +42,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
             if (image.preview === true) {
                 booking.Spot.previewImage = image.url
                 delete booking.Spot.SpotImages
-                console.log(booking.Spot)
             }
         }
     }

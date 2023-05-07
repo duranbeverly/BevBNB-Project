@@ -62,7 +62,7 @@ router.get('/current', requireAuth, async (req, res) => {
             if (image.preview === true) {
                 review.Spot.previewImage = image.url
                 delete review.Spot.SpotImages
-                console.log(review.Spot)
+
             }
         }
     }
