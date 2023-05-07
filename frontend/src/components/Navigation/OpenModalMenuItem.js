@@ -17,7 +17,7 @@ function OpenModalMenuItem({
     };
 
     return (
-        <li onClick={onClick}>{itemText}</li>
+        <li className={itemText.split(" ").join("-").toLowerCase()} onClick={onClick}>{itemText}</li>
     );
 }
 

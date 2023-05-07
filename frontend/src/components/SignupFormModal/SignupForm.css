@@ -3,16 +3,16 @@
 h1 {
     font-family: 'Manjari', sans-serif;
     font-weight: bold;
+    color: #51636D;
 }
 
-.signupBox {
+#signupBox {
     display: flex;
     flex-direction: column;
     width: 20rem;
     box-sizing: border-box;
     align-items: center;
-    background-color: white;
-    border-radius: 20px;
+    border-radius: 25px;
 }
 
 .signupForm {
@@ -21,6 +21,7 @@ h1 {
     width: 100%;
     box-sizing: border-box;
     padding: 0 25px 25px 25px;
+    border-radius: 25px;
 
 }
 
@@ -35,14 +36,29 @@ h1 {
     flex-direction: column;
     margin-bottom: 1rem;
     font-family: 'Manjari', sans-serif;
+    color: #51636D;
+
 
 }
 
-.signupbutton {
+#signupbutton {
     height: 3rem;
-    background-color: rgb(255, 90, 95);
+    background-color: #ff5a5f;
     color: white;
     box-shadow: 4px 3px 5px rgb(133, 117, 117);
     font-family: 'Comfortaa', cursive;
+    font-size: 16px;
     font-weight: bold;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.input-area {
+    background-color: white;
+    border-radius: 7px;
+    border: #51636d71 1px solid;
+    height: 25px;
+    font-size: 14px;
+
 }

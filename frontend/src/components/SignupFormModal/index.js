@@ -43,12 +43,13 @@ function SignupFormModal() {
 
     return (
         <>
-            <div className="signupBox">
+            <div id="signupBox">
                 <h1>Sign Up</h1>
                 <form className="signupForm" onSubmit={handleSubmit}>
                     <label className="signuplabel">
                         Email
                         <input
+                            className="input-area"
                             type="text"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -59,6 +60,7 @@ function SignupFormModal() {
                     <label className="signuplabel">
                         Username
                         <input
+                            className="input-area"
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -69,6 +71,7 @@ function SignupFormModal() {
                     <label className="signuplabel">
                         First Name
                         <input
+                            className="input-area"
                             type="text"
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
@@ -79,6 +82,7 @@ function SignupFormModal() {
                     <label className="signuplabel">
                         Last Name
                         <input
+                            className="input-area"
                             type="text"
                             value={lastName}
                             onChange={(e) => setLastName(e.target.value)}
@@ -89,6 +93,7 @@ function SignupFormModal() {
                     <label className="signuplabel">
                         Password
                         <input
+                            className="input-area"
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -99,6 +104,7 @@ function SignupFormModal() {
                     <label className="signuplabel">
                         Confirm Password
                         <input
+                            className="input-area"
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -108,7 +114,7 @@ function SignupFormModal() {
                     {errors.confirmPassword && (
                         <p>{errors.confirmPassword}</p>
                     )}
-                    <button className="signupbutton" type="submit">Sign Up</button>
+                    <button id="signupbutton" type="submit">Sign Up</button>
                 </form>
             </div>
         </>
