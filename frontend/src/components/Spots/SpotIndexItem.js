@@ -8,7 +8,7 @@ export const SpotIndexItem = ({ spot }) => {
     const dispatch = useDispatch();
 
     return (
-        <div className='image-card'>
+        <div className='image-card' title={spot.name}>
             <Link className="link" to={`/reports/${spot.id}`}>
                 <div className='image-box'>
                     <img src={spot.previewImage} />
