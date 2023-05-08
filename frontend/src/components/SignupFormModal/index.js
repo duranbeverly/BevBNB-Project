@@ -114,7 +114,7 @@ function SignupFormModal() {
                     {errors.confirmPassword && (
                         <p>{errors.confirmPassword}</p>
                     )}
-                    <button id="signupbutton" type="submit">Sign Up</button>
+                    <button disabled={Object.values(errors).length > 0} id="signupbutton" type="submit">Sign Up</button>
                 </form>
             </div>
         </>

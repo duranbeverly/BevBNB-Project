@@ -25,6 +25,16 @@ function LoginFormModal() {
             });
     };
 
+
+
+
+    const demoUser = () => {
+        let credential = "Rich-Guy"
+        let password = "password"
+        return dispatch(sessionActions.login({ credential, password }))
+            .then(closeModal)
+    }
+
     return (
         <>
 
@@ -55,6 +65,8 @@ function LoginFormModal() {
                         <p>{errors.credential}</p>
                     )}
                     <button id="signupbutton" type="submit">Log In</button>
+                    <p className="link" onClick={demoUser}>Log In as Demo User</p>
+
                 </form>
             </div>
         </>
