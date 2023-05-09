@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import ProfileButton from './ProfileButton';
 import logo from './Assets/BevBnb.png'
 import './Navigation.css';
+import { Link } from 'react-router-dom';
+import { CreateSpot } from '../Spots/CreateSpot';
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
@@ -18,9 +20,16 @@ function Navigation({ isLoaded }) {
                 </NavLink>
             </li>
             {isLoaded && (
-                <li className='navLi'>
-                    <ProfileButton user={sessionUser} />
-                </li>
+                <>
+
+                    <li className='navLi'>
+                        <div className='nav-top-right'>
+                            {sessionUser ? (<Link className="create-spot-text" to='/spots/new'>Create a Spot</Link>) : null}
+                            <ProfileButton user={sessionUser} />
+                        </div>
+                    </li>
+
+                </>
             )}
         </ul>
     );

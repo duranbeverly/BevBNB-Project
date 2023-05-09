@@ -64,7 +64,7 @@ export const SpotShow = () => {
                                     <h2>{`$${spot.price}`} <span className='small-text'>night</span></h2>
                                     <div className='top-right-reserve'>
                                         <div className='rating'>
-                                            <i className="fa-solid fa-star fa-xs" style={{ color: '#51563d' }}></i>
+                                            <i className="fa-solid fa-star fa-sm move-up-less" style={{ color: '#51563d' }}></i>
                                             <p>{`${spot.avgStarRating.toFixed(2)} -`}</p>
                                         </div>
                                         <p>{`${spot.numReviews} reviews`}</p>

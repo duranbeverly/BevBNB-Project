@@ -77,8 +77,5 @@ img {
     justify-content: space-between;
     align-items: end;
     width: 100%;
-}
-
-p {
-    margin: 0;
+    margin-bottom: 0;
 }

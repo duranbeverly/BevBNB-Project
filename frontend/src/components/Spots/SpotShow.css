@@ -1,8 +1,6 @@
 p {
     font-family: 'Manjari', sans-serif;
     color: #51636D;
-    font-size: 18px;
-    padding-top: 5px;
 
 }
 
@@ -68,8 +66,9 @@ p {
     flex-direction: column;
     width: 300px;
     padding: 8px;
-    box-sizing: border-box;
+    margin-left: 15px;
     border-radius: 15px;
+    box-sizing: border-box;
 
 }
 
@@ -168,4 +167,21 @@ p {
 
 .reviews {
     margin-bottom: 20px;
+}
+
+.move-up-less {
+    padding-bottom: 3px;
+}
+
+.price-stars p {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+p.price-spots {
+    margin: 0;
+}
+
+h2.title-spots {
+    margin-bottom: 12px;
 }

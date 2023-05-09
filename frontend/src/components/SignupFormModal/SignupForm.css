@@ -57,6 +57,7 @@ h2 {
     border-radius: 15px;
     border: none;
     cursor: pointer;
+
 }
 
 .input-area {
@@ -73,5 +74,9 @@ h2 {
 .rating {
     display: flex;
     align-items: center;
-    
+
+}
+
+.link {
+    margin-bottom: 0;
 }

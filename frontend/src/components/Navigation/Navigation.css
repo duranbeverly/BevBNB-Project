@@ -93,3 +93,18 @@
     justify-content: center;
     margin-top: 15px;
 }
+
+
+.create-spot-text {
+    cursor: pointer;
+    font-family: 'Manjari', sans-serif;
+    text-decoration: none;
+    list-style-type: none;
+    color: #51636D;
+}
+
+.nav-top-right {
+    display: flex;
+    align-items: center;
+    column-gap: 1rem;
+}
