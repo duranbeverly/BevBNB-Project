@@ -3,6 +3,7 @@ export const LOAD_SPOTS = 'spots/LOAD_SPOTS'
 export const RECEIVE_SPOT = 'spots/RECEIVE_SPOT'
 export const ADD_SPOT = 'spots/ADD_SPOT'
 export const ADD_SPOT_IMAGE = 'spots/ADD_SPOT_IMAGE'
+export const GET_CURRENT_SPOTS = 'spots/GET_CURRENT_SPOTS'
 
 //Action creator for loading spots
 export const loadSpots = (spots) => {
@@ -31,6 +32,13 @@ export const addSpotImage = (image) => {
     return ({
         type: ADD_SPOT_IMAGE,
         image
+    })
+}
+
+export const currentUserSpots = () => {
+    return ({
+        type: GET_CURRENT_SPOTS
+
     })
 }
 
@@ -111,12 +119,9 @@ export const spotsReducer = (state = {}, action) => {
             return { ...state, [action.spot.id]: action.spot }
         }
         case ADD_SPOT_IMAGE: {
-            console.log("in the reducer what is state: ", state)
-            console.log("in the reducer what is action/payload: ", action)
             let newState = { ...state }
             newState.SpotImages = []
             newState.SpotImages.push(action.image)
-            console.log("newState: ", newState)
             return newState
         }
         default:

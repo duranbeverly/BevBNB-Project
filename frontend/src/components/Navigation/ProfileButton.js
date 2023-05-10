@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
+    // const spots = useSelector(state => state.spots[user.])
+
+
 
     const openMenu = () => {
         if (showMenu) return;
@@ -51,9 +55,12 @@ function ProfileButton({ user }) {
                         <li className="log-in">Hello, {user.username}</li>
                         <li className="log-in">{user.firstName} {user.lastName}</li>
                         <li className="log-in">{user.email}</li>
+                        { }
+                        <li className="log-in">Manage Spots</li>
                         <li className="log-in-button">
                             <button className="logout-button" onClick={logout}>Log Out</button>
                         </li>
+
                     </>
                 ) : (
                     <>
@@ -67,6 +74,7 @@ function ProfileButton({ user }) {
                             onItemClick={closeMenu}
                             modalComponent={<SignupFormModal />}
                         />
+
                     </>
                 )}
             </ul>

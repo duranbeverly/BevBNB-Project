@@ -7,7 +7,7 @@ h2 {
 .review-form {
     display: flex;
     flex-direction: column;
-    width: 20rem;
+    width: 30rem;
     box-sizing: border-box;
     padding: 0 25px 25px 25px;
     border-radius: 25px;
@@ -44,4 +44,29 @@ h2 {
     font-size: 14px;
     font-family: 'Manjari', sans-serif;
     letter-spacing: 1.5px;
+    padding-top: 8px;
+}
+
+.long-text {
+    height: 80px;
+}
+
+.rating-input {
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
+    margin: 10px 0;
+
+}
+
+.rating-input div {
+    cursor: pointer;
+}
+
+.empty {
+    color: #51636d7e;
+}
+
+.filled {
+    color: #51636D;
 }

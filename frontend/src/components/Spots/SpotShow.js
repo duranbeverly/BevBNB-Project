@@ -7,25 +7,30 @@ import * as sessionActions from '../../store/session';
 import "./SpotShow.css"
 import { getAllReviews } from '../../store/reviews';
 import { SpotShowReview } from './SpotShowReview';
-import { useModal } from '../../context/Modal';
-import CreateReview from '../Reviews/CreateReview.js'
-import OpenModalButton from "../OpenModalButton";
-
+import OpenModalButton from '../OpenModalButton';
+import CreateReview from '../Reviews/CreateReview';
 
 export const SpotShow = () => {
     const { spotId } = useParams();
     const spot = useSelector(state => state.spots[spotId])
     const review = useSelector(state => state.review)
     const user = useSelector(state => state.session.user);
-    let reviewArray;
-    if (review) {
-        reviewArray = Object.values(review)
-    }
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
 
 
+
+    let reviewArray;
+    if (review) {
+        reviewArray = Object.values(review)
+    }
+
+
+    const userRepeat = reviewArray.find(review => review.userId === user.id)
+
+
     useEffect(() => {
+        console.log(spotId)
         dispatch(getSingleSpot(spotId))
             .then(() => setLoading(false))
             .then(() => dispatch(getAllReviews(spotId)));
@@ -35,7 +40,7 @@ export const SpotShow = () => {
         return <div className='loading'>Loading...</div>
     }
 
-
+    if (!reviewArray) return null
     if (!spot) {
         return null
     }
@@ -61,6 +66,7 @@ export const SpotShow = () => {
                     <div className='information-spot'>
                         <div className='top-info'>
                             <div className='host-info'>
+                                {console.log("first user first name: ", spot.Owner.firstName)}
                                 <h2>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
                                 <p>{spot.description}</p>
                             </div>
@@ -70,7 +76,8 @@ export const SpotShow = () => {
                                     <div className='top-right-reserve'>
                                         <div className='rating'>
                                             <i className="fa-solid fa-star fa-sm move-up-less" style={{ color: '#51563d' }}></i>
-                                            <p>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</p>
+                                            <p>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} `}</p>
+                                            <span className='dot-from-hell-small'>.</span>
                                         </div>
                                         <p>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</p>
                                     </div>
@@ -81,24 +88,24 @@ export const SpotShow = () => {
 
                     </div>
                     <div className='reviews'>
-                        <h2>Reviews</h2>
+
                         {console.log("user: ", user)}
-                        {user && user.firstName != spot.Owner.firstName ? (
+                        {user && user?.firstName != spot.Owner.firstName && !userRepeat ? (
                             <>
                                 <div className='top-reviews'>
                                     <div className='rating'>
                                         <i className="fa-solid fa-star move-up" style={{ color: '#51563d' }}></i>
-                                        <h2>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</h2>
+                                        <h2>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} `}</h2>
+                                        <span className='dot-from-hell'>.</span>
+                                        <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                     </div>
-                                    <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                 </div>
                                 {spot.numReviews === 0 && <p>Be the first to post a review!</p>}
+                                {console.log("review array: ", reviewArray)}
                                 <OpenModalButton
                                     buttonText="Post Your Review"
-                                    modalComponent={<CreateReview />}
+                                    modalComponent={<CreateReview spot={spot} user={user} />}
                                 />
-
-
                             </>
 
 
@@ -107,9 +114,10 @@ export const SpotShow = () => {
                                 <div className='top-reviews'>
                                     <div className='rating'>
                                         <i className="fa-solid fa-star move-up" style={{ color: '#51563d' }}></i>
-                                        <h2>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</h2>
+                                        <h2 className='reviews-title-div'>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} `}</h2>
+                                        <span className='dot-from-hell'>.</span>
+                                        <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                     </div>
-                                    <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                 </div>
                             </>
                         )}
@@ -117,12 +125,12 @@ export const SpotShow = () => {
                     </div>
                     <div>
 
-                        {reviewArray.map((review) => {
-                            return (
-                                <SpotShowReview review={review} />
-
-                            )
-                        })}
+                        {reviewArray
+                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                            .map((review) => (
+                                <SpotShowReview key={review.id} review={review} spot={spot} user={user} />
+                            ))
+                        }
                     </div>
 
                 </div>

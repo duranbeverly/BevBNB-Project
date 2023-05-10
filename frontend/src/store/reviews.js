@@ -6,14 +6,14 @@ export const LOAD_REVIEWS = 'reviews/LOAD_REVIEWS'
 export const ADD_REVIEW = 'reviews/ADD_REVIEW'
 //action creators
 
-export const loadReviews = () => ({
+export const loadReviews = (reviews) => ({
     type: LOAD_REVIEWS,
-
+    reviews
 })
 
-export const addReview = (spotId) => ({
+export const addReview = (review) => ({
     type: ADD_REVIEW,
-    spotId
+    review
 })
 //thunk action creators
 
@@ -30,13 +30,28 @@ export const getAllReviews = (spotId) => async (dispatch) => {
     }
 }
 
-export const createReview = (spotId) => async (dispatch) => {
-
-    const response = await csrfFetch(`/spots/${spotId} / reviews}`)
+export const createReview = (review, spotId) => async (dispatch) => {
+    console.log("in the thunk: ", review)
+    console.log("in the thunk spot id: ", spotId)
+    const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(review)
+    })
+    if (response.ok) {
+        const data = await response.json()
+        console.log("this is what we got from fetch: ", data)
+        dispatch(addReview(data))
+        return data
+    } else {
+        console.log("grabbing data failed T-T")
+    }
 }
 //create a reducer
 
 export const reviewsReducer = (state = {}, action) => {
+    console.log("in the reducer state: ", state)
+    console.log("in the reducer action: ", action)
     switch (action.type) {
         case LOAD_REVIEWS: {
             const newState = {}
@@ -45,6 +60,9 @@ export const reviewsReducer = (state = {}, action) => {
             })
 
             return newState;
+        }
+        case ADD_REVIEW: {
+            return { ...state, [action.review.id]: action.review }
         }
         default:
             return state
