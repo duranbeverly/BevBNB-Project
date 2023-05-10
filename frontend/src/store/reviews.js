@@ -1,15 +1,20 @@
 import { useParams } from "react-router-dom/cjs/react-router-dom.min"
+import { csrfFetch } from "./csrf"
 
 //action type constants
 export const LOAD_REVIEWS = 'reviews/LOAD_REVIEWS'
-
+export const ADD_REVIEW = 'reviews/ADD_REVIEW'
 //action creators
 
-export const loadReviews = (reviews) => ({
+export const loadReviews = () => ({
     type: LOAD_REVIEWS,
-    reviews
+
 })
 
+export const addReview = (spotId) => ({
+    type: ADD_REVIEW,
+    spotId
+})
 //thunk action creators
 
 export const getAllReviews = (spotId) => async (dispatch) => {
@@ -25,6 +30,10 @@ export const getAllReviews = (spotId) => async (dispatch) => {
     }
 }
 
+export const createReview = (spotId) => async (dispatch) => {
+
+    const response = await csrfFetch(`/spots/${spotId} / reviews}`)
+}
 //create a reducer
 
 export const reviewsReducer = (state = {}, action) => {

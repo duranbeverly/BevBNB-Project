@@ -56,53 +56,27 @@ export const CreateSpot = () => {
     }, [country, address, city, state, lat, lng, description, name, price, previewImage])
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitted(!submitted)
 
         if (Object.values(errors).length < 1) {
             let spot = {
-                country,
                 address,
                 city,
                 state,
+                country,
                 lat,
                 lng,
                 name,
+                description,
                 price
             }
+            let spotId = await dispatch(createSpot(spot))
+
+            handleImages(spotId)
 
 
-
-            if (previewImage) {
-                let image1 = {
-                    spotId: true,
-                    url: previewImage,
-                    preview: true,
-                }
-            }
-
-            let image2 = {
-                spotId: true,
-                url: imageUrl1,
-                preview: false,
-            }
-            let image3 = {
-                spotId: true,
-                url: imageUrl2,
-                preview: false,
-            }
-            let image4 = {
-                spotId: true,
-                url: imageUrl3,
-                preview: false,
-            }
-            let image5 = {
-                spotId: true,
-                url: imageUrl3,
-                preview: false,
-            }
-            //remember 4 images are optional so you will have to handle that at some point
 
         } else {
             return alert('Please correct the errors')
@@ -110,95 +84,162 @@ export const CreateSpot = () => {
     }
 
 
+    const handleImages = async (spotId) => {
+        let images = []
+        if (previewImage) images.push(previewImage)
+        if (imageUrl1) images.push(imageUrl1)
+        if (imageUrl2) images.push(imageUrl2)
+        if (imageUrl3) images.push(imageUrl3)
+        if (imageUrl4) images.push(imageUrl4)
+
+
+        console.log("images array: ", images)
+
+
+        const dispatchPromises = images.map(async (url, index) => {
+            const image = {
+                url,
+                preview: (index === 0)
+            };
+            console.log("single image before thunk: ", image)
+            await dispatch(createSpotImage(image, spotId));
+        });
+
+        for await (const promise of dispatchPromises) {
+            // Do nothing
+        }
+
+        history.push(`/spots/${spotId}`);
+
+
+        // for (let i = 0; i < images.length; i++) {
+        //     let url = images[i]
+        //     let image = {
+        //         url,
+        //         preview: (i === 0)
+        //     }
+        //     await dispatch(createSpotImage(image, spotId))
+        // }
+
+
+        history.push(`/spots/${spotId}`)
+        //remember 4 images are optional so you will have to handle that at some point
+    }
+
     return (
         <>
-            <div class="signup-box" onSubmit={handleSubmit}>
+            <div className="signup-box" onSubmit={handleSubmit}>
                 <form className='signup-form'>
                     <h1 className='form-title'>Create a new Spot</h1>
                     <h2 className='form-subtitle'>Where's your place located?</h2>
                     <h3 className='form-info'>Guests will only get your exact address once they book a reservation.</h3>
-                    <label className="signup-label" for="country">Country: {submitted && <span className='errors'>{errors.country}</span>}</label>
-                    <input className="input-area-spots" type="text" id="country" name="country" placeholder='Country'
-                        value={country} onChange={e => setCountry(e.target.value)}
-                    />
+                    <label className="signup-label">Country: {submitted && <span className='errors'>{errors.country}</span>}
+                        <input className="input-area-spots" type="text" id="country" name="country" placeholder='Country'
+                            value={country} onChange={e => setCountry(e.target.value)}
+                        />
+                    </label>
 
-                    <label className="signup-label" for="street-address">Street Address:{submitted && <span className='errors'>{errors.address}</span>}</label>
-                    <input className="input-area-spots" type="text" id="street-address" name="street-address" placeholder='Street Address'
-                        value={address} onChange={e => setAddress(e.target.value)}
-                    />
+                    <label className="signup-label">Street Address:{submitted && <span className='errors'>{errors.address}</span>}
+                        <input className="input-area-spots" type="text" id="street-address" name="street-address" placeholder='Street Address'
+                            value={address} onChange={e => setAddress(e.target.value)}
+                        />
+
+                    </label>
 
                     <div className='city-state'>
                         <div className='city'>
-                            <label className="signup-label" for="city">City:{submitted && <span className='errors'>{errors.city}</span>}</label>
-                            <input className="input-area-spots" type="text" id="city" name="city" placeholder='City'
-                                value={city} onChange={e => setCity(e.target.value)}
-                            />
+                            <label className="signup-label">City:{submitted && <span className='errors'>{errors.city}</span>}
+                                <input className="input-area-spots" type="text" id="city" name="city" placeholder='City'
+                                    value={city} onChange={e => setCity(e.target.value)}
+                                />
+
+                            </label>
 
                         </div>
                         <div className='city'>
-                            <label className="signup-label" for="state">State:{submitted && <span className='errors'>{errors.state}</span>}</label>
-                            <input className="input-area-spots" type="text" id="state" name="state" placeholder='State'
-                                value={state} onChange={e => setState(e.target.value)}
-                            />
+                            <label className="signup-label">State:{submitted && <span className='errors'>{errors.state}</span>}
+                                <input className="input-area-spots" type="text" id="state" name="state" placeholder='State'
+                                    value={state} onChange={e => setState(e.target.value)}
+                                />
+                            </label>
 
                         </div>
 
                     </div>
                     <div className='city-state'>
                         <div className='city'>
-                            <label className="signup-label" for="lat">lat:{submitted && <span className='errors'>{errors.lat}</span>}</label>
-                            <input className="input-area-spots" type="text" id="lat" name="lat"
-                                value={lat} onChange={e => setLat(e.target.value)}
-                            />
+                            <label className="signup-label">lat:{submitted && <span className='errors'>{errors.lat}</span>}
+                                <input className="input-area-spots" type="text" id="lat" name="lat"
+                                    value={lat} onChange={e => setLat(e.target.value)}
+                                />
+
+                            </label>
                         </div>
                         <div className='city'>
-                            <label className="signup-label" for="lng">lng:{submitted && <span className='errors'>{errors.lng}</span>}</label>
-                            <input className="input-area-spots" type="text" id="lng" name="lng"
-                                value={lng} onChange={e => setLng(e.target.value)}
-                            />
+                            <label className="signup-label">lng:{submitted && <span className='errors'>{errors.lng}</span>}
+                                <input className="input-area-spots" type="text" id="lng" name="lng"
+                                    value={lng} onChange={e => setLng(e.target.value)}
+                                />
+                            </label>
                         </div>
 
                     </div>
                     <h2 className='description-title'>Describe your place to your guests</h2>
                     <p className='description-info'>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
-                    <label className="signup-label" for="description">Description:{submitted && <span className='errors'>{errors.description}</span>}</label>
-                    <textarea className="input-text-area" id="description" name="description" placeholder='Please write at least 30 characters'
-                        value={description} onChange={e => setDescription(e.target.value)}
-                    ></textarea>
+                    <label className="signup-label">Description:{submitted && <span className='errors'>{errors.description}</span>}
+                        <textarea className="input-text-area" id="description" name="description" placeholder='Please write at least 30 characters'
+                            value={description} onChange={e => setDescription(e.target.value)}
+                        ></textarea>
+
+                    </label>
 
                     <h2 className='spot-title'>Create a title for your spot</h2>
                     <p className='title-info'>Catch guests' attention with a spot title that highlights what makes your place special.</p>
-                    <label className="signup-label" for="name-of-spot">Name of Spot:{submitted && <span className='errors'>{errors.name}</span>}</label>
-                    <input className="input-area-spots" type="text" id="name-of-spot" name="name-of-spot" placeholder='Name your spot'
-                        value={name} onChange={e => setName(e.target.value)}
-                    />
+                    <label className="signup-label">Name of Spot:{submitted && <span className='errors'>{errors.name}</span>}
+                        <input className="input-area-spots" type="text" id="name-of-spot" name="name-of-spot" placeholder='Name your spot'
+                            value={name} onChange={e => setName(e.target.value)}
+                        />
+                    </label>
 
                     <h2 className='price-title'>Set a price for your spot</h2>
                     <p className='price-info'>Competitive pricing can help your listing stand out and rank higher in search results</p>
-                    <label className="signup-label" for="price">Price:{submitted && <span className='errors'>{errors.price}</span>}</label>
-                    <input className="input-area-spots" type="text" id="price" name="price" placeholder='Price per night($USD)'
-                        value={price} onChange={e => setPrice(e.target.value)}
-                    />
+                    <label className="signup-label">Price:{submitted && <span className='errors'>{errors.price}</span>}
+                        <input className="input-area-spots" type="text" id="price" name="price" placeholder='Price per night($USD)'
+                            value={price} onChange={e => setPrice(e.target.value)}
+                        />
+                    </label>
 
                     <h2 className='price-title'>Liven up your spot with photos</h2>
                     <p className='price-info'>Submit a link to at least one photo to publish your spot.</p>
 
-                    <label className="signup-label" for="preview-image-url">Preview Image URL:{submitted && <span className='errors'>{errors.previewImage}</span>}</label>
-                    <input className="input-area-spots" type="text" id="preview-image-url" name="preview-image-url" placeholder='Image Url'
-                        value={previewImage} onChange={e => setPreviewImage(e.target.value)}
-                    />
+                    <label className="signup-label">Preview Image URL:{submitted && <span className='errors'>{errors.previewImage}</span>}
+                        <input className="input-area-spots" type="text" id="preview-image-url" name="preview-image-url" placeholder='Preview Image Url'
+                            value={previewImage} onChange={e => setPreviewImage(e.target.value)}
+                        />
+                    </label>
 
-                    <label className="signup-label" for="image-url-1">Image URL 1:{submitted && <span className='errors'>{errors.imageUrl1}</span>}</label>
-                    <input className="input-area-spots" type="text" id="image-url-1" name="image-url-1" />
+                    <label className="signup-label" >Image URL 1:{submitted && <span className='errors'>{errors.imageUrl1}</span>}
+                        <input className="input-area-spots" type="text" id="image-url-1" name="image-url-1" placeholder='Image Url'
+                            value={imageUrl1} onChange={e => setImageUrl1(e.target.value)} />
+                    </label>
 
-                    <label className="signup-label" for="image-url-2">Image URL 2: {submitted && <span className='errors'>{errors.imageUrl2}</span>}</label>
-                    <input className="input-area-spots" type="text" id="image-url-2" name="image-url-2" />
+                    <label className="signup-label">Image URL 2: {submitted && <span className='errors'>{errors.imageUrl2}</span>}
+                        <input className="input-area-spots" type="text" id="image-url-2" name="image-url-2" placeholder='Image Url'
+                            value={imageUrl2} onChange={e => setImageUrl2(e.target.value)}
+                        />
+                    </label>
 
-                    <label className="signup-label" for="image-url-3">Image URL 3:{submitted && <span className='errors'>{errors.imageUrl3}</span>}</label>
-                    <input className="input-area-spots" type="text" id="image-url-3" name="image-url-3" />
+                    <label className="signup-label">Image URL 3:{submitted && <span className='errors'>{errors.imageUrl3}</span>}
+                        <input className="input-area-spots" type="text" id="image-url-3" name="image-url-3" placeholder='Image Url'
+                            value={imageUrl3} onChange={e => setImageUrl3(e.target.value)}
+                        />
+                    </label>
 
-                    <label className="signup-label" for="image-url-4">Image URL 4: {submitted && <span className='errors'>{errors.imageUrl4}</span>}</label>
-                    <input className="input-area-spots" type="text" id="image-url-4" name="image-url-4" />
+                    <label className="signup-label">Image URL 4: {submitted && <span className='errors'>{errors.imageUrl4}</span>}
+                        <input className="input-area-spots" type="text" id="image-url-4" name="image-url-4" placeholder='Image Url'
+                            value={imageUrl4} onChange={e => setImageUrl4(e.target.value)}
+                        />
+                    </label>
 
                     <button className="spot-button" type="submit">Submit</button>
 

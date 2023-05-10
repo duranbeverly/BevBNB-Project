@@ -7,6 +7,10 @@ import * as sessionActions from '../../store/session';
 import "./SpotShow.css"
 import { getAllReviews } from '../../store/reviews';
 import { SpotShowReview } from './SpotShowReview';
+import { useModal } from '../../context/Modal';
+import CreateReview from '../Reviews/CreateReview.js'
+import OpenModalButton from "../OpenModalButton";
+
 
 export const SpotShow = () => {
     const { spotId } = useParams();
@@ -31,6 +35,7 @@ export const SpotShow = () => {
         return <div className='loading'>Loading...</div>
     }
 
+
     if (!spot) {
         return null
     }
@@ -43,12 +48,12 @@ export const SpotShow = () => {
                     <h2>{spot?.city}, {spot?.state}, {spot?.country}</h2>
                     <div className='center'>
                         <div className='images'>
-                            <img id="image" src={spot?.SpotImages[0].url}></img>
+                            <img id="image" src={spot?.SpotImages[0]?.url}></img>
                             <div className='grid-images'>
-                                <img className="small-image" src={spot?.SpotImages[1].url}></img>
-                                <img className="small-image" src={spot?.SpotImages[2].url}></img>
-                                <img className="small-image" src={spot?.SpotImages[3].url}></img>
-                                <img className="small-image" src={spot?.SpotImages[4].url}></img>
+                                <img className="small-image" src={spot?.SpotImages[1]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"} ></img>
+                                <img className="small-image" src={spot?.SpotImages[2]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"} ></img>
+                                <img className="small-image" src={spot?.SpotImages[3]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"}></img>
+                                <img className="small-image" src={spot?.SpotImages[4]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"}></img>
                             </div>
                         </div>
 
@@ -65,9 +70,9 @@ export const SpotShow = () => {
                                     <div className='top-right-reserve'>
                                         <div className='rating'>
                                             <i className="fa-solid fa-star fa-sm move-up-less" style={{ color: '#51563d' }}></i>
-                                            <p>{`${spot.avgStarRating.toFixed(2)} -`}</p>
+                                            <p>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</p>
                                         </div>
-                                        <p>{`${spot.numReviews} reviews`}</p>
+                                        <p>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</p>
                                     </div>
                                 </div>
                                 <button className="reserve-button" type='button' onClick={(e) => { alert('Feature coming soon') }}>Reserve</button>
@@ -77,16 +82,23 @@ export const SpotShow = () => {
                     </div>
                     <div className='reviews'>
                         <h2>Reviews</h2>
-                        {user ? (
+                        {console.log("user: ", user)}
+                        {user && user.firstName != spot.Owner.firstName ? (
                             <>
                                 <div className='top-reviews'>
                                     <div className='rating'>
-                                        <i class="fa-solid fa-star move-up" style={{ color: '#51563d' }}></i>
-                                        <h2>{`${spot.avgStarRating.toFixed(2)} -`}</h2>
+                                        <i className="fa-solid fa-star move-up" style={{ color: '#51563d' }}></i>
+                                        <h2>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</h2>
                                     </div>
-                                    <h2>{`${spot.numReviews} reviews`}</h2>
+                                    <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                 </div>
-                                <button className='review-button' type='button'>Post Your Review</button>
+                                {spot.numReviews === 0 && <p>Be the first to post a review!</p>}
+                                <OpenModalButton
+                                    buttonText="Post Your Review"
+                                    modalComponent={<CreateReview />}
+                                />
+
+
                             </>
 
 
@@ -95,9 +107,9 @@ export const SpotShow = () => {
                                 <div className='top-reviews'>
                                     <div className='rating'>
                                         <i className="fa-solid fa-star move-up" style={{ color: '#51563d' }}></i>
-                                        <h2>{`${spot.avgStarRating.toFixed(2)}-`}</h2>
+                                        <h2>{`${spot.avgStarRating?.toFixed(2) ?? 'New'} -`}</h2>
                                     </div>
-                                    <h2>{`${spot.numReviews} reviews`}</h2>
+                                    <h2>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</h2>
                                 </div>
                             </>
                         )}

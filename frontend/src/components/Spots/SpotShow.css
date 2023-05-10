@@ -64,7 +64,7 @@ p {
     border: #51636D 1px solid;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 30px;
     padding: 8px;
     margin-left: 15px;
     border-radius: 15px;
@@ -124,6 +124,16 @@ p {
 .host-info {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    width: 600px;
+    box-sizing: border-box;
+}
+
+.host-info p {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+
 }
 
 .top-reviews {
@@ -151,7 +161,7 @@ p {
     padding: 0;
 }
 
-.review-button {
+button {
     height: 2.5rem;
     /* background-color: #51636dbb; */
     color: #51636D;
