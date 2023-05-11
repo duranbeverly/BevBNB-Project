@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getAllSpots } from '../../store/spots';
-import { getCurrentUserSpots } from '../../store/spots';
+import { getCurrentUserSpots, resetCurrentUserSpots } from '../../store/spots';
 import { CurrentSpotInfo } from './CurrentSpotInfo';
+import { useHistory } from 'react-router-dom'
 import "./Spot.css"
 
 //you only get to this page if you have spots
@@ -16,11 +17,12 @@ export const CurrentSpots = () => {
     const currentSpotsObj = useSelector(state => state.spots.currentUserSpots)
     const [loading, setLoading] = useState(true)
     const [fetchedData, setFetchedData] = useState(null); // declare a state variable to store the fetched data
-
+    const history = useHistory()
     const dispatch = useDispatch();
 
     useEffect(() => {
 
+        if (!user) return history.push('/')
         setLoading(true);
         dispatch(getCurrentUserSpots())
             .then((data) => {
@@ -30,6 +32,12 @@ export const CurrentSpots = () => {
                 }, 1000);
             })
             .catch((err) => console.error(err));
+
+
+        return () => {
+            dispatch(resetCurrentUserSpots())
+        }
+
     }, [dispatch, user]);
 
     if (loading) {

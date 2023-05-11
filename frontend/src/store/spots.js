@@ -4,6 +4,7 @@ export const RECEIVE_SPOT = 'spots/RECEIVE_SPOT'
 export const ADD_SPOT = 'spots/ADD_SPOT'
 export const ADD_SPOT_IMAGE = 'spots/ADD_SPOT_IMAGE'
 export const GET_CURRENT_SPOTS = 'spots/GET_CURRENT_SPOTS'
+export const RESET_CURRENT_USER_SPOTS = 'spots/RESET_CURRENT_USER_SPOTS'
 export const EDIT_SPOT = 'spots/EDIT_SPOT'
 export const DELETE_SPOT = 'spots/DELETE_SPOT'
 //Action creator for loading spots
@@ -57,6 +58,13 @@ export const deleteSpots = (spotId) => {
         spotId
     })
 }
+
+export const resetCurrentUserSpots = () => {
+    return ({
+        type: RESET_CURRENT_USER_SPOTS
+    })
+}
+
 //thunk action creators
 export const getAllSpots = () => async (dispatch) => {
 
@@ -127,6 +135,8 @@ export const getCurrentUserSpots = () => async (dispatch) => {
     }
 }
 
+
+
 export const editSpot = (spotId, spot) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`, {
         method: 'PUT',
@@ -182,6 +192,10 @@ export const spotsReducer = (state = { allSpots: {}, currentUserSpots: {} }, act
             action.spots.Spots.forEach((spot) => {
                 newState.currentUserSpots[spot.id] = spot;
             });
+            return newState
+        }
+        case RESET_CURRENT_USER_SPOTS: {
+            const newState = { ...state, allSpots: { ...state.allSpots }, currentUserSpots: {} };
             return newState
         }
         case EDIT_SPOT: {
