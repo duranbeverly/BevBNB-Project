@@ -187,7 +187,7 @@ module.exports = {
             },
             {
                 spotId: 6,
-                url: 'https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683575436/App%20Academy%20Front%20End%20Project/6_luxury_yacht/interior_kbpzoj.jpghttps://res.cloudinary.com/dnzxq7dgk/image/upload/v1683575436/App%20Academy%20Front%20End%20Project/6_luxury_yacht/interior_kbpzoj.jpg',
+                url: 'https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683575436/App%20Academy%20Front%20End%20Project/6_luxury_yacht/interior_kbpzoj.jpg',
                 preview: false
             },
             {
