@@ -6,7 +6,7 @@ import OpenModalButton from "../OpenModalButton";
 import "./CreateReview.css"
 
 function CreateReview({ spot, user }) {
-    console.log(user.id)
+
 
     const [stars, setStars] = useState(0);
     const [review, setReview] = useState("");
@@ -27,7 +27,7 @@ function CreateReview({ spot, user }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log(errors)
+
         if (Object.values(errors).length > 0) {
             alert("Please fix the errors you have")
 
@@ -38,8 +38,6 @@ function CreateReview({ spot, user }) {
                 review,
             };
 
-            console.log("before dispatching review: ", reviews.stars)
-            console.log("before dispatching review(user.id): ", user.id)
             await dispatch(createReview(reviews, spotId)).then(closeModal)
                 .then(() => {
                     setStars(0);

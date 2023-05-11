@@ -213,3 +213,16 @@ h2.title-spots {
     margin-right: 10px;
     height: 40px;
 }
+
+.small-button {
+    height: 2rem;
+    margin: 10px 10px 0 0px;
+
+}
+
+.bright {
+    background-color: #ff5a5f;
+    color: white;
+    border: none;
+
+}

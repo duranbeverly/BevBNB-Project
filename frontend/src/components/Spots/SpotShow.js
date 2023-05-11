@@ -12,9 +12,10 @@ import CreateReview from '../Reviews/CreateReview';
 
 export const SpotShow = () => {
     const { spotId } = useParams();
-    const spot = useSelector(state => state.spots[spotId])
+    const spot = useSelector(state => state.spots.allSpots[spotId])
     const review = useSelector(state => state.review)
     const user = useSelector(state => state.session.user);
+
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
 
@@ -30,7 +31,7 @@ export const SpotShow = () => {
 
 
     useEffect(() => {
-        console.log(spotId)
+
         dispatch(getSingleSpot(spotId))
             .then(() => setLoading(false))
             .then(() => dispatch(getAllReviews(spotId)));
@@ -66,7 +67,7 @@ export const SpotShow = () => {
                     <div className='information-spot'>
                         <div className='top-info'>
                             <div className='host-info'>
-                                {console.log("first user first name: ", spot.Owner.firstName)}
+
                                 <h2>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
                                 <p>{spot.description}</p>
                             </div>
@@ -89,7 +90,7 @@ export const SpotShow = () => {
                     </div>
                     <div className='reviews'>
 
-                        {console.log("user: ", user)}
+
                         {user && user?.firstName != spot.Owner.firstName && !userRepeat ? (
                             <>
                                 <div className='top-reviews'>
@@ -101,7 +102,7 @@ export const SpotShow = () => {
                                     </div>
                                 </div>
                                 {spot.numReviews === 0 && <p>Be the first to post a review!</p>}
-                                {console.log("review array: ", reviewArray)}
+
                                 <OpenModalButton
                                     buttonText="Post Your Review"
                                     modalComponent={<CreateReview spot={spot} user={user} />}

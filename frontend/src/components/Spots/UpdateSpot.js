@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { createSpot, createSpotImage } from '../../store/spots';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { editSpot, getSingleSpot, createSpotImage } from '../../store/spots';
 import "./CreateSpot.css"
 
-export const CreateSpot = () => {
+//populate the form with data that pertains to this spot
+//probably better to get it from the database especially the images
+//destructure the data and use those as arguments in the useEffect
+//then when the form is submitted dispatch to an edit thunk
+//use a reducer so you can store the data in your store
+
+export const UpdateSpot = () => {
+    const { spotId } = useParams();
+    const spot = useSelector(state => state.spots.allSpots[spotId])
+
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -25,6 +34,25 @@ export const CreateSpot = () => {
     const history = useHistory()
 
     useEffect(() => {
+        dispatch(getSingleSpot(spotId)).then((spot) => {
+            setCountry(spot.country);
+            setAddress(spot.address);
+            setCity(spot.city);
+            setState(spot.state);
+            setLat(spot.lat);
+            setLng(spot.lng);
+            setDescription(spot.description);
+            setName(spot.name);
+            setPrice(spot.price);
+            spot.SpotImages[0] && setPreviewImage(spot.SpotImages[0].url)
+            spot.SpotImages[1] && setImageUrl1(spot.SpotImages[1].url)
+            spot.SpotImages[2] && setImageUrl1(spot.SpotImages[2].url)
+            spot.SpotImages[3] && setImageUrl1(spot.SpotImages[3].url)
+            spot.SpotImages[4] && setImageUrl1(spot.SpotImages[4].url)
+        })
+    }, [dispatch, spotId])
+
+    useEffect(() => {
         let errors = {}
         if (country.length < 1) errors.country = "Country is required"
         if (address.length < 1) errors.address = "Street address is required"
@@ -35,8 +63,7 @@ export const CreateSpot = () => {
         if (description.length < 30) errors.description = "Description should be at least 30 characters"
         if (name.length < 1) errors.name = "Name of spot is required"
         if (price.length < 1) errors.price = "Price is required"
-        if (previewImage.length < 1) errors.previewImage = "Preview image URL is required"
-        else if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) {
+        if (previewImage.length > 0 && !previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) {
             errors.previewImage = "Preview image URL must end in .png, .jpg, or .jpeg"
         }
         if (imageUrl1.length > 0 && !imageUrl1.endsWith('.png') && !imageUrl1.endsWith('.jpg') && !imageUrl1.endsWith('.jpeg')) {
@@ -72,7 +99,7 @@ export const CreateSpot = () => {
                 description,
                 price
             }
-            let spotId = await dispatch(createSpot(spot))
+            let spotId2 = await dispatch(editSpot(spotId, spot))
 
             handleImages(spotId)
 
@@ -116,7 +143,7 @@ export const CreateSpot = () => {
         //         url,
         //         preview: (i === 0)
         //     }
-        //     await dispatch(createSpotImage(image, spotId))
+        //     await dispatch(UpdateSpotImage(image, spotId))
         // }
 
 
@@ -128,7 +155,7 @@ export const CreateSpot = () => {
         <>
             <div className="signup-box" onSubmit={handleSubmit}>
                 <form className='signup-form'>
-                    <h1 className='form-title'>Create a new Spot</h1>
+                    <h1 className='form-title'>Update Your Spot</h1>
                     <h2 className='form-subtitle'>Where's your place located?</h2>
                     <h3 className='form-info'>Guests will only get your exact address once they book a reservation.</h3>
                     <label className="signup-label">Country: {submitted && <span className='errors'>{errors.country}</span>}
@@ -239,7 +266,7 @@ export const CreateSpot = () => {
                         />
                     </label>
 
-                    <button className="spot-button" type="submit">Submit</button>
+                    <button className="spot-button" type="submit">Update Your Spot</button>
 
                 </form>
 

@@ -5,14 +5,41 @@ import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { getCurrentUserSpots } from "../../store/spots";
 
 function ProfileButton({ user }) {
+    const spotsObj = useSelector(state => state.spots.allSpots) //getting from single state (clears out when you refresh page)
+
+    const spots = Object.values(spotsObj)
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
-    // const spots = useSelector(state => state.spots[user.])
+    const [isLoading, setIsLoading] = useState(true)
+   
+    const [hasSpots, setHasSpots] = useState(false)
+    const [hasNoSpots, setHasNoSpots] = useState(false)
 
+    let hasSpotsAlready = [];
 
+    //get data from the database
+    useEffect(() => {
+
+        let dataSpots = dispatch(getCurrentUserSpots()).then((data) => setIsLoading(false))
+            .then(() => {
+                if (dataSpots) {
+                    //don't need to rely on filter can just get the fetch
+                    //this could be an issue later on
+                    setHasSpots(true) //these guys will just see create a new spot
+                } else {
+                    setHasSpots(false)
+                }
+
+            })
+
+        //if the new user has spots or if the hasSpots is true then create a slice of state / fetch current user spots if not then do nothing reset the slice of state to zero on re-render
+        //if there is no user clear the slice of state that has their
+        //each page should be able to handle its own data
+    }, [dispatch, user])
 
     const openMenu = () => {
         if (showMenu) return;
@@ -41,6 +68,8 @@ function ProfileButton({ user }) {
         closeMenu();
     };
 
+
+
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
     return (
@@ -55,8 +84,7 @@ function ProfileButton({ user }) {
                         <li className="log-in">Hello, {user.username}</li>
                         <li className="log-in">{user.firstName} {user.lastName}</li>
                         <li className="log-in">{user.email}</li>
-                        { }
-                        <li className="log-in">Manage Spots</li>
+                        {hasSpots && <li className="log-in"><Link to='/spots/current'>Manage Spots</Link></li>}
                         <li className="log-in-button">
                             <button className="logout-button" onClick={logout}>Log Out</button>
                         </li>

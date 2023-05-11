@@ -31,8 +31,7 @@ export const getAllReviews = (spotId) => async (dispatch) => {
 }
 
 export const createReview = (review, spotId) => async (dispatch) => {
-    console.log("in the thunk: ", review)
-    console.log("in the thunk spot id: ", spotId)
+
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,7 +39,7 @@ export const createReview = (review, spotId) => async (dispatch) => {
     })
     if (response.ok) {
         const data = await response.json()
-        console.log("this is what we got from fetch: ", data)
+
         dispatch(addReview(data))
         return data
     } else {
@@ -50,8 +49,7 @@ export const createReview = (review, spotId) => async (dispatch) => {
 //create a reducer
 
 export const reviewsReducer = (state = {}, action) => {
-    console.log("in the reducer state: ", state)
-    console.log("in the reducer action: ", action)
+
     switch (action.type) {
         case LOAD_REVIEWS: {
             const newState = {}
