@@ -79,3 +79,8 @@ img {
     width: 100%;
     margin-bottom: 0;
 }
+
+.manage-title {
+    margin-top: 30px;
+    margin-left: 30px;
+}

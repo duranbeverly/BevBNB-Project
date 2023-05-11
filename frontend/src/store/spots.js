@@ -166,7 +166,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 export const spotsReducer = (state = { allSpots: {}, currentUserSpots: {} }, action) => {
     switch (action.type) {
         case LOAD_SPOTS: {
-            const newState = { ...state, allSpots: { ...state.allSpots }, currentUserSpots: { ...state.currentUserSpots } };
+            const newState = { allSpots: {}, currentUserSpots: {} };
             action.spots.Spots.forEach((spot) => {
                 newState.allSpots[spot.id] = spot;
             });

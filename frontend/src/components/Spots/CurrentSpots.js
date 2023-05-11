@@ -52,7 +52,7 @@ export const CurrentSpots = () => {
 
     return (
         <>
-            <h2>Manage Spots</h2>
+            <h2 className="manage-title">Manage Spots</h2>
             <div className='body-spots'>
                 {currentSpots.map((currentSpot) => (
                     <CurrentSpotInfo currentSpot={currentSpot} key={currentSpot.id} />

@@ -18,8 +18,8 @@ export const UpdateSpot = () => {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
+    const [lat, setLat] = useState(20);
+    const [lng, setLng] = useState(20);
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
@@ -58,8 +58,6 @@ export const UpdateSpot = () => {
         if (address.length < 1) errors.address = "Street address is required"
         if (city.length < 1) errors.city = "City is required"
         if (state.length < 1) errors.state = "State is required"
-        if (lat.length < 1) errors.lat = "lat is required"
-        if (lng.length < 1) errors.lng = "lng is required"
         if (description.length < 30) errors.description = "Description should be at least 30 characters"
         if (name.length < 1) errors.name = "Name of spot is required"
         if (price.length < 1) errors.price = "Price is required"
@@ -88,6 +86,7 @@ export const UpdateSpot = () => {
         setSubmitted(!submitted)
 
         if (Object.values(errors).length < 1) {
+
             let spot = {
                 address,
                 city,
@@ -122,29 +121,29 @@ export const UpdateSpot = () => {
 
 
 
-        const dispatchPromises = images.map(async (url, index) => {
-            const image = {
-                url,
-                preview: (index === 0)
-            };
-            await dispatch(createSpotImage(image, spotId));
-        });
+        // const dispatchPromises = images.map(async (url, index) => {
+        //     const image = {
+        //         url,
+        //         preview: (index === 0)
+        //     };
+        //     await dispatch(createSpotImage(image, spotId));
+        // });
 
-        for await (const promise of dispatchPromises) {
-            // Do nothing
+        // for await (const promise of dispatchPromises) {
+        //     // Do nothing
+        // }
+        for (let i = 0; i < images.length; i++) {
+            let url = images[i]
+            let image = {
+                url,
+                preview: (i === 0)
+            }
+            await dispatch(createSpotImage(image, spotId))
         }
 
         history.push(`/spots/${spotId}`);
 
 
-        // for (let i = 0; i < images.length; i++) {
-        //     let url = images[i]
-        //     let image = {
-        //         url,
-        //         preview: (i === 0)
-        //     }
-        //     await dispatch(UpdateSpotImage(image, spotId))
-        // }
 
 
         history.push(`/spots/${spotId}`)
