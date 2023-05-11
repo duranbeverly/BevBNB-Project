@@ -3,7 +3,12 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom'
 import "./Spot.css"
 
+import OpenModalButton from '../OpenModalButton';
+import { HandleDeleteSpot } from './HandleDeleteSpot';
+
 export const CurrentSpotInfo = ({ currentSpot }) => {
+
+
     return (
         <div>
             <div className='image-card' title={currentSpot.name}>
@@ -22,8 +27,11 @@ export const CurrentSpotInfo = ({ currentSpot }) => {
                     <Link to={`/spots/${currentSpot.id}/edit`}>
                         <button className="small-button bright" type='button'>Update</button>
                     </Link>
-                    <button className="small-button" type='button'>Delete</button>
                 </Link>
+                <OpenModalButton
+                    buttonText="Delete"
+                    modalComponent={<HandleDeleteSpot currentSpotId={currentSpot.id} />}
+                />
             </div>
         </div>
 

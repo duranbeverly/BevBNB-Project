@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
-import OpenModalButton from "../OpenModalButton";
 import "./CreateReview.css"
 
 function CreateReview({ spot, user }) {
