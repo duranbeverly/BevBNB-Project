@@ -45,7 +45,6 @@ export const CurrentSpots = () => {
     }
 
     let currentSpots = Object.values(currentSpotsObj)
-    console.log("current spots derp: ", currentSpots)
     if (!spots) {
         return null
     }

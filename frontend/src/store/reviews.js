@@ -34,7 +34,8 @@ export const getAllReviews = (spotId) => async (dispatch) => {
         dispatch(loadReviews(data))
         return data
     } else {
-        console.log("grabbing data failed T-T")
+        const data = await response.json()
+        return data
     }
 }
 
@@ -51,7 +52,8 @@ export const createReview = (review, spotId) => async (dispatch) => {
         dispatch(addReview(data))
         return data
     } else {
-        console.log("grabbing data failed T-T")
+        const data = await response.json()
+        return data
     }
 }
 
@@ -86,7 +88,6 @@ export const reviewsReducer = (state = {}, action) => {
         case DELETE_REVIEW: {
             let newState = { ...state }
             delete newState[action.reviewId]
-            console.log("this is the state of things in reviews in reviews reducer: ", action, state)
             return newState
         }
         default:

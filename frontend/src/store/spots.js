@@ -74,7 +74,6 @@ export const getAllSpots = () => async (dispatch) => {
         const data = await response.json()
 
         dispatch(loadSpots(data))
-        console.log(data)
         return data //check if this is necessary
     }
 }
@@ -87,7 +86,8 @@ export const getSingleSpot = (spotId) => async (dispatch) => {
         dispatch(receiveSpots(data))
         return data
     } else {
-        // console.log("error in getting spot (╯°□°）╯︵ ┻━┻")
+        const data = await response.json()
+        return data
     }
 }
 
@@ -104,7 +104,7 @@ export const createSpot = (spot) => async (dispatch) => {
         return data.id
     } else {
         const data = await response.json()
-        // console.log("error in getting spot ಥ_ಥ")
+        return data
     }
 }
 
@@ -119,7 +119,7 @@ export const createSpotImage = (image, spotId) => async (dispatch) => {
         dispatch(addSpotImage(data))
     } else {
         const data = await response.json()
-        console.log("error in getting spot image ಥ_ಥ")
+        return data
     }
 }
 
@@ -128,10 +128,10 @@ export const getCurrentUserSpots = () => async (dispatch) => {
     if (response.ok) {
         const data = await response.json()
         dispatch(userSpots(data))
-        // console.log("What we get when we try to fetch current spots", data)
         return data
     } else {
-        // console.log("error in getting current user spots ಥ_ಥ")
+        const data = await response.json()
+        return data
     }
 }
 

@@ -8,7 +8,6 @@ import "./Spot.css"
 export const SpotIndex = () => {
     const spotsObj = useSelector(state => state.spots.allSpots)
     const spots = Object.values(spotsObj)
-    console.log("initial spots: ", spots)
     const dispatch = useDispatch()
 
     useEffect(() => {
