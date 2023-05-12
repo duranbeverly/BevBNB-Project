@@ -10,15 +10,16 @@ import { DeleteReview } from './DeleteReview';
 //here we need to get the users with the review.userId
 
 export const SpotShowReview = ({ review, user, spot }) => {
+    if (!review) return null
     return (
         <>
 
-            <div className='single-review'>
+            <div className='single-review' key={`${review?.id}`}>
                 <h2 className='review-names'>{review.User?.firstName}</h2>
                 <p className='no-space'>{new Date(review.createdAt).toLocaleDateString()}</p>
                 <div className='review'>
                     <p>{review.review}</p>
-                    {user.id === review.userId &&
+                    {user?.id === review.userId &&
                         <OpenModalButton
                             buttonText="Delete"
                             modalComponent={< DeleteReview reviewId={review.id} />}

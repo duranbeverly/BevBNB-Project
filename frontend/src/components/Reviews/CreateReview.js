@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
+import { getSingleSpot } from '../../store/spots';
 import "./CreateReview.css"
 
-function CreateReview({ spot, user }) {
+function CreateReview({ spot, user, spotId }) {
 
 
     const [stars, setStars] = useState(0);
@@ -37,7 +38,8 @@ function CreateReview({ spot, user }) {
                 review,
             };
 
-            await dispatch(createReview(reviews, spotId)).then(closeModal)
+            await dispatch(createReview(reviews, spotId, user)).then(closeModal)
+                .then(() => { dispatch(getSingleSpot(spotId)) })
                 .then(() => {
                     setStars(0);
                     setReview("");

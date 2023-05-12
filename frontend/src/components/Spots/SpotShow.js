@@ -19,22 +19,19 @@ export const SpotShow = () => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(true)
 
-
-
     let reviewArray;
     if (review) {
         reviewArray = Object.values(review)
     }
 
-
-
-
     useEffect(() => {
-
         dispatch(getSingleSpot(spotId))
             .then(() => setLoading(false))
             .then(() => dispatch(getAllReviews(spotId)));
     }, [dispatch, spotId]);
+
+
+
 
     if (loading) {
         return <div className='loading'>Loading...</div>
@@ -129,7 +126,7 @@ export const SpotShow = () => {
                         {reviewArray
                             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                             .map((review) => (
-                                <SpotShowReview key={review.id} review={review} spot={spot} user={user} />
+                                <SpotShowReview key={review.id} review={review} spot={spot} user={user} spotId={spotId} />
                             ))
                         }
                     </div>
