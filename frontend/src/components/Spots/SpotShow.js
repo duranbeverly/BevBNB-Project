@@ -27,7 +27,6 @@ export const SpotShow = () => {
     }
 
 
-    const userRepeat = reviewArray?.find(review => review.userId === user?.id)
 
 
     useEffect(() => {
@@ -41,6 +40,7 @@ export const SpotShow = () => {
         return <div className='loading'>Loading...</div>
     }
 
+    const userRepeat = reviewArray?.find(review => review.userId === user?.id)
     if (!reviewArray) return null
     if (!spot) {
         return null
@@ -56,10 +56,10 @@ export const SpotShow = () => {
                         <div className='images'>
                             <img id="image" src={spot?.SpotImages[0]?.url}></img>
                             <div className='grid-images'>
-                                <img className="small-image" src={spot?.SpotImages[1]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"} ></img>
-                                <img className="small-image" src={spot?.SpotImages[2]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"} ></img>
-                                <img className="small-image" src={spot?.SpotImages[3]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"}></img>
-                                <img className="small-image" src={spot?.SpotImages[4]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683660910/App%20Academy%20Front%20End%20Project/other_assets/photo_coming_soon_oxrmin.png"}></img>
+                                <img className="small-image" src={spot?.SpotImages[1]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912192/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_wlmzra.png"} ></img>
+                                <img className="small-image" src={spot?.SpotImages[2]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912192/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_wlmzra.png"} ></img>
+                                <img className="small-image" src={spot?.SpotImages[3]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912192/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_wlmzra.png"}></img>
+                                <img className="small-image" src={spot?.SpotImages[4]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912192/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_wlmzra.png"}></img>
                             </div>
                         </div>
 
