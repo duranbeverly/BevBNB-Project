@@ -27,7 +27,7 @@ export const SpotShow = () => {
     }
 
 
-    const userRepeat = reviewArray.find(review => review.userId === user.id)
+    const userRepeat = reviewArray?.find(review => review.userId === user?.id)
 
 
     useEffect(() => {
