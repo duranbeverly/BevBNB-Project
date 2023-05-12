@@ -46,9 +46,9 @@ export const UpdateSpot = () => {
             setPrice(spot.price);
             spot.SpotImages[0] && setPreviewImage(spot.SpotImages[0].url)
             spot.SpotImages[1] && setImageUrl1(spot.SpotImages[1].url)
-            spot.SpotImages[2] && setImageUrl1(spot.SpotImages[2].url)
-            spot.SpotImages[3] && setImageUrl1(spot.SpotImages[3].url)
-            spot.SpotImages[4] && setImageUrl1(spot.SpotImages[4].url)
+            spot.SpotImages[2] && setImageUrl2(spot.SpotImages[2].url)
+            spot.SpotImages[3] && setImageUrl3(spot.SpotImages[3].url)
+            spot.SpotImages[4] && setImageUrl4(spot.SpotImages[4].url)
         })
     }, [dispatch, spotId])
 

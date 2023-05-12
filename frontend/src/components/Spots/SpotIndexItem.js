@@ -7,8 +7,9 @@ import "./Spot.css"
 export const SpotIndexItem = ({ spot }) => {
     const dispatch = useDispatch();
 
+    //give this div a key
     return (
-        <div className='image-card' title={spot.name}>
+        <div className='image-card' title={spot.name} key={`${spot.id}`}>
             <Link className="link" to={`/spots/${spot.id}`}>
                 <div className='image-box'>
                     <img src={spot.previewImage} />

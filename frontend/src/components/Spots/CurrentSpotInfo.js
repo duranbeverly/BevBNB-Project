@@ -11,7 +11,7 @@ export const CurrentSpotInfo = ({ currentSpot }) => {
 
     return (
         <div>
-            <div className='image-card' title={currentSpot.name}>
+            <div className='image-card' title={currentSpot.name} key={`${currentSpot.id}`}>
                 <Link className="link" to={`/spots/${currentSpot.id}`}>
                     <div className='image-box'>
                         <img src={currentSpot.previewImage} />
@@ -24,9 +24,9 @@ export const CurrentSpotInfo = ({ currentSpot }) => {
                         </div>
                         <p className='price-spots'>{`$${currentSpot.price} night`}</p>
                     </div>
-                    <Link to={`/spots/${currentSpot.id}/edit`}>
-                        <button className="small-button bright" type='button'>Update</button>
-                    </Link>
+                </Link>
+                <Link to={`/spots/${currentSpot.id}/edit`}>
+                    <button className="small-button bright" type='button'>Update</button>
                 </Link>
                 <OpenModalButton
                     buttonText="Delete"
