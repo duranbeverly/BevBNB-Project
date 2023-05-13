@@ -6,40 +6,49 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { getCurrentUserSpots } from "../../store/spots";
+import { resetCurrentUserSpots } from "../../store/spots";
 
 function ProfileButton({ user }) {
-    const spotsObj = useSelector(state => state.spots.allSpots) //getting from single state (clears out when you refresh page)
 
+    const spotsObj = useSelector(state => state.spots.allSpots) //getting from single state (clears out when you refresh page)
+    const currentUsersSpots = useSelector(state => state.spots.currentUserSpots)
     const spots = Object.values(spotsObj)
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
     const [isLoading, setIsLoading] = useState(true)
-   
+
     const [hasSpots, setHasSpots] = useState(false)
     const [hasNoSpots, setHasNoSpots] = useState(false)
+
 
     let hasSpotsAlready = [];
 
     //get data from the database
     useEffect(() => {
+        if (!user) {
+            setHasSpots(false)
+        } else {
+            let dataSpots = dispatch(getCurrentUserSpots()).then((data) => setIsLoading(false))
+                .then(() => {
 
-        let dataSpots = dispatch(getCurrentUserSpots()).then((data) => setIsLoading(false))
-            .then(() => {
-                if (dataSpots) {
-                    //don't need to rely on filter can just get the fetch
-                    //this could be an issue later on
-                    setHasSpots(true) //these guys will just see create a new spot
-                } else {
-                    setHasSpots(false)
-                }
+                    if (Object.values(dataSpots).length > 1) {
+                        //don't need to rely on filter can just get the fetch
+                        //this could be an issue later on
+                        setHasSpots(true) //these guys will just see create a new spot
+                    } else {
+                        setHasSpots(false)
+                    }
 
-            })
+                })
+
+        }
 
         //if the new user has spots or if the hasSpots is true then create a slice of state / fetch current user spots if not then do nothing reset the slice of state to zero on re-render
         //if there is no user clear the slice of state that has their
         //each page should be able to handle its own data
     }, [dispatch, user])
+
 
     const openMenu = () => {
         if (showMenu) return;
@@ -64,7 +73,9 @@ function ProfileButton({ user }) {
 
     const logout = (e) => {
         e.preventDefault();
-        dispatch(sessionActions.logout());
+        dispatch(sessionActions.logout())
+        dispatch(resetCurrentUserSpots())
+
         closeMenu();
     };
 
