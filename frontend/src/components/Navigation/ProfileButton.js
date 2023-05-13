@@ -21,26 +21,25 @@ function ProfileButton({ user }) {
     const [hasSpots, setHasSpots] = useState(false)
     const [hasNoSpots, setHasNoSpots] = useState(false)
 
-
+    // .then(() => {setLoading(false)}
+    //
     let hasSpotsAlready = [];
 
-    //get data from the database
     useEffect(() => {
+
         if (!user) {
             setHasSpots(false)
         } else {
-            let dataSpots = dispatch(getCurrentUserSpots()).then((data) => setIsLoading(false))
-                .then(() => {
+            let dataSpots = dispatch(getCurrentUserSpots()).then((data) => {
+                if (Object.values(data)[0].length > 0) {
+                    //don't need to rely on filter can just get the fetch
+                    //this could be an issue later on
+                    setHasSpots(true) //these guys will just see create a new spot
+                } else {
+                    setHasSpots(false)
+                }
 
-                    if (Object.values(dataSpots).length > 1) {
-                        //don't need to rely on filter can just get the fetch
-                        //this could be an issue later on
-                        setHasSpots(true) //these guys will just see create a new spot
-                    } else {
-                        setHasSpots(false)
-                    }
-
-                })
+            })
 
         }
 
@@ -48,7 +47,6 @@ function ProfileButton({ user }) {
         //if there is no user clear the slice of state that has their
         //each page should be able to handle its own data
     }, [dispatch, user])
-
 
     const openMenu = () => {
         if (showMenu) return;
@@ -74,7 +72,7 @@ function ProfileButton({ user }) {
     const logout = (e) => {
         e.preventDefault();
         dispatch(sessionActions.logout())
-        dispatch(resetCurrentUserSpots())
+
 
         closeMenu();
     };
