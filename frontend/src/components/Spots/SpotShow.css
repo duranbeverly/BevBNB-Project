@@ -226,3 +226,37 @@ h2.title-spots {
     border: none;
 
 }
+
+
+@media only screen and (max-width: 760px) {
+    .wrapper {
+        width: 90%;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .small-text {
+        font-size: 12px;
+    }
+
+    .top-info {
+        flex-direction: column;
+    }
+
+    .reserve-area {
+        align-self: center;
+        margin-top: 20px;
+        width: 50%;
+
+    }
+
+    .host-info {
+        width: 100%;
+    }
+}
