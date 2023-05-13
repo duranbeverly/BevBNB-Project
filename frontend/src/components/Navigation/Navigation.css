@@ -116,3 +116,21 @@
     color: #51636D;
     background-color: white;
 }
+
+@media only screen and (max-width: 760px) {
+    .logo {
+        height: 6rem;
+    }
+
+    .navButton {
+        height: auto;
+    }
+
+    .fa-solid.fa-bars {
+        font-size: 15px;
+    }
+
+    .fas.fa-user-circle {
+        font-size: 25px;
+    }
+}
