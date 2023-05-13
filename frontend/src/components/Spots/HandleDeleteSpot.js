@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteSpot } from '../../store/spots';
+import { getCurrentUserSpots } from "../../store/spots";
 import "./HandleDelete.css"
 
 
@@ -10,9 +11,9 @@ export const HandleDeleteSpot = ({ currentSpotId }) => {
     const { closeModal } = useModal()
 
     const handleDelete = (e) => {
-        e.preventDefault();
 
-        dispatch(deleteSpot(currentSpotId)).then(closeModal)
+        e.preventDefault();
+        dispatch(deleteSpot(currentSpotId)).then(() => dispatch(getCurrentUserSpots())).then(closeModal)
     }
 
 

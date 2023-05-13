@@ -22,21 +22,21 @@ export const CurrentSpots = () => {
 
     useEffect(() => {
 
-        if (!user) return history.push('/')
-        setLoading(true);
-        dispatch(getCurrentUserSpots())
-            .then((data) => {
-                setFetchedData(data); // update the state variable with the fetched data
-                setTimeout(() => {
-                    setLoading(false);
-                }, 1000);
-            })
-            .catch((err) => console.error(err));
+        if (!user) {
+            return history.push('/')
+        } else {
+            setLoading(true);
+            dispatch(getCurrentUserSpots())
+                .then((data) => {
+                    setFetchedData(data); // update the state variable with the fetched data
+                    setTimeout(() => {
+                        setLoading(false);
+                    }, 1000);
+                })
+                .catch((err) => console.error(err));
 
-
-        return () => {
-            dispatch(resetCurrentUserSpots())
         }
+
 
     }, [dispatch, user]);
 
@@ -44,7 +44,11 @@ export const CurrentSpots = () => {
         return <div className='loading'>Loading...</div>
     }
 
-    let currentSpots = Object.values(currentSpotsObj)
+    let currentSpots;
+    if (currentSpotsObj) {
+        currentSpots = Object.values(currentSpotsObj)
+    }
+
     if (!spots) {
         return null
     }
