@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 80px;
+    height: 9rem;
     border-bottom: #51636d70 1px solid;
 
 }
@@ -119,11 +119,13 @@
 
 @media only screen and (max-width: 760px) {
     .logo {
-        height: 6rem;
+        height: 5rem;
     }
 
     .navButton {
         height: auto;
+        width: fit-content;
+        padding: 5px 10px;
     }
 
     .fa-solid.fa-bars {
@@ -132,5 +134,13 @@
 
     .fas.fa-user-circle {
         font-size: 25px;
+    }
+
+    .create-spot-text {
+        font-size: 12px;
+    }
+
+    .navbar {
+        height: 6rem;
     }
 }
