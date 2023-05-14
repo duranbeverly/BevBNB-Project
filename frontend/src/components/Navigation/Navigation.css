@@ -127,6 +127,7 @@
         height: auto;
         width: fit-content;
         padding: 5px 10px;
+        margin-right: 0;
     }
 
     .fa-solid.fa-bars {
