@@ -12,6 +12,7 @@
     justify-content: space-between;
     height: 9rem;
     border-bottom: #51636d70 1px solid;
+    padding-left: 5px;
 
 }
 
@@ -142,5 +143,6 @@
 
     .navbar {
         height: 6rem;
+        padding-left: 0;
     }
 }
