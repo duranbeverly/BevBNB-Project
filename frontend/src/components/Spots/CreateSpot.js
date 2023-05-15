@@ -240,7 +240,7 @@ export const CreateSpot = () => {
                         />
                     </label>
 
-                    <button className="spot-button" type="submit">Submit</button>
+                    <button className="spot-button" type="submit">Create Spot</button>
 
                 </form>
 
