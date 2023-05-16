@@ -132,6 +132,7 @@ function SignupFormModal() {
                         <p>{errors.confirmPassword}</p>
                     )}
                     <button disabled={disabled} id="signupbutton" type="submit">Sign Up</button>
+
                 </form>
             </div>
         </>
