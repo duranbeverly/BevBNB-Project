@@ -1,9 +1,31 @@
 <!--!!START SILENT -->
 # BevBnB
+
+## About
+BevBnB is an application for booking some very unique spots in the United States, that centers on bringing people back to nature and away from the hustle and bustle of busy city lives. My site is live on https://bevbnb.onrender.com
+
+# Technologies
+React/Redux CSS
+
+Leveraging React, I create a dynamic and responsive user interface that adapts to your needs. Through Redux, I efficiently manage the application's state, ensuring a smooth flow of information. Additionally, CSS allows me to apply custom styles and layout elements, elevating the visual appeal of the website.
 <!--!!END -->
 <!--!!ADD -->
 <!-- # `<name of application here>` -->
 <!--!!END_ADD -->
+
+## Frontend
+
+### List of Spots
+![Screenshot](./frontend/public/Assets/BevBnB_home.PNG)
+
+### Spot Information
+![Screenshot](./frontend/public/Assets/BevBnB_Spot.PNG)
+
+### Create a Spot
+![Screenshot](./frontend/public/Assets/BevBnB_Create_Spot.PNG)
+
+### Manage Spots
+![Screenshot](./frontend/public/Assets/BevBnB_Manage_Spots.PNG)
 
 ## Database Schema Design
 
