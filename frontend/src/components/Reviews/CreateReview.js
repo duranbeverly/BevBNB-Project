@@ -58,6 +58,7 @@ function CreateReview({ spot, user, spotId }) {
     return (
         <form className="review-form" onSubmit={handleSubmit}>
             <h2 className="review-title">How was your stay?</h2>
+
             {serverError && <p className="server-error">{serverError}</p>}
             <label className="review-label">
                 Review:
