@@ -2,14 +2,14 @@
 # BevBnB
 
 ## Table of Contents
--[BevBnB](#bevbnb)
-  -[Table of Contents](#table-of-contents)
-  -[About](#about)
-  -[Technologies](#technologies)
-  -[Frontend](#frontend)
-  -[Features](#features)
-  -[Database Schema](#database-schema-design)
-  -[Contact](#contact)
+- [BevBnB](#bevbnb)
+  - [Table of Contents](#table-of-contents)
+  - [About](#about)
+  - [Technologies](#technologies)
+  - [Frontend](#frontend)
+  - [Features](#features)
+  - [Database Schema](#database-schema-design)
+  - [Contact](#contact)
 
 ## About
 BevBnB is an application for booking some very unique spots in the United States, that centers on bringing people back to nature and away from the hustle and bustle of busy city lives. My site is live on https://bevbnb.onrender.com
@@ -50,7 +50,7 @@ Leveraging React, I create a dynamic and responsive user interface that adapts t
 <!--!!END_ADD -->
 
 ## API Documentation
--[API Documentation](./API.md)
+- [API Documentation](./API.md)
 
 ## Contact
 
