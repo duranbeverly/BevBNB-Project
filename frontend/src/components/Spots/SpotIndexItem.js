@@ -9,7 +9,7 @@ export const SpotIndexItem = ({ spot }) => {
 
     //give this div a key
     return (
-        <div className='image-card' title={spot.name} key={`${spot.id}`}>
+        <div className='image-card' title={spot.name}>
             <Link className="link" to={`/spots/${spot.id}`}>
                 <div className='image-box'>
                     <img src={spot.previewImage} />

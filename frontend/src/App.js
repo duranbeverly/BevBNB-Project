@@ -8,6 +8,7 @@ import { SpotShow } from "./components/Spots/SpotShow";
 import { CreateSpot } from "./components/Spots/CreateSpot";
 import { CurrentSpots } from "./components/Spots/CurrentSpots";
 import { UpdateSpot } from "./components/Spots/UpdateSpot";
+import Footer from "./components/Footer"
 
 function App() {
   const dispatch = useDispatch();
@@ -19,14 +20,31 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
+
       {isLoaded && <Switch>
         <Route exact path='/'>
           <SpotIndex />
+          <Footer />
         </Route>
-        <Route exact path="/spots/new"><CreateSpot /></Route>
-        <Route exact path="/spots/current"><CurrentSpots /></Route>
-        <Route exact path="/spots/:spotId/edit"><UpdateSpot /></Route>
-        <Route exact path="/spots/:spotId"><SpotShow /></Route>
+        <Route exact path="/spots/new">
+          <CreateSpot />
+          <Footer />
+        </Route>
+        <Route exact path="/spots/current">
+          <CurrentSpots />
+          <Footer />
+        </Route>
+        <Route exact path="/spots/:spotId/edit">
+          <UpdateSpot />
+          <Footer />
+        </Route>
+        <Route exact path="/spots/:spotId">
+          <SpotShow />
+          <Footer />
+        </Route>
+        <Route>
+          <h2>Page does not exist</h2>
+        </Route>
       </Switch>}
     </>
   );

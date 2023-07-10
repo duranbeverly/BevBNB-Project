@@ -12,6 +12,7 @@ export const SpotIndex = () => {
 
     useEffect(() => {
         dispatch(getAllSpots())
+
     }, [dispatch])
 
     return (

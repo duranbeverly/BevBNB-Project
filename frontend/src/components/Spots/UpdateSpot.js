@@ -120,18 +120,6 @@ export const UpdateSpot = () => {
 
 
 
-
-        // const dispatchPromises = images.map(async (url, index) => {
-        //     const image = {
-        //         url,
-        //         preview: (index === 0)
-        //     };
-        //     await dispatch(createSpotImage(image, spotId));
-        // });
-
-        // for await (const promise of dispatchPromises) {
-        //     // Do nothing
-        // }
         for (let i = 0; i < images.length; i++) {
             let url = images[i]
             let image = {

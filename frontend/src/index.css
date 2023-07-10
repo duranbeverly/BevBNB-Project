@@ -1,5 +1,57 @@
 /* TODO Add site wide styles */
 
 * {
-    background-color: #FBF7F4; 
+    background-color: #FBF7F4;
+}
+
+.errors {
+    font-size: 10px;
+    color: #a14848;
+    margin: 0;
+}
+
+.label-errors {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.space {
+    margin-bottom: .5rem;
+}
+
+.no-space {
+    margin-bottom: 10px;
+}
+
+.footer {
+    height: 5rem;
+    /* position: fixed;
+    bottom: 0; */
+    border-top: #51636d70 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.developer-name {
+    font-size: 12px;
+    color: #51636D;
+}
+
+.social-icon {
+    width: 25px;
+    color: #51636D;
+    font-size: 1.5rem;
+}
+
+.social-icon:hover {
+    scale: 1.1;
+}
+
+.social-media-div {
+    display: flex;
+    gap: 1rem;
 }

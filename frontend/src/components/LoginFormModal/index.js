@@ -39,7 +39,10 @@ function LoginFormModal() {
         <>
 
             <div id="signupBox">
-                <h1>Log In</h1>
+                <h1 className="no-space">Log In</h1>
+                {errors.credential && (
+                    <p className="errors space">{errors.credential}</p>
+                )}
                 <form className="signupForm" onSubmit={handleSubmit}>
                     <label className="signuplabel">
                         Username or Email
@@ -61,9 +64,7 @@ function LoginFormModal() {
                             required
                         />
                     </label>
-                    {errors.credential && (
-                        <p>{errors.credential}</p>
-                    )}
+
                     <button id="signupbutton" type="submit">Log In</button>
                     <p className="link" onClick={demoUser}>Log In as Demo User</p>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
@@ -16,22 +16,15 @@ function SignupFormModal() {
     const { closeModal } = useModal();
     const [disabled, setDisabled] = useState(true)
 
-    useEffect(() => {
-        const isDisabled =
-            !email ||
-            !username ||
-            !firstName ||
-            !lastName ||
-            !password ||
-            !confirmPassword ||
-            username.length < 4 ||
-            password.length < 6;
 
-        setDisabled(isDisabled);
-    }, [email, username, firstName, lastName, password, confirmPassword]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (errors && Object.keys(errors).length > 0) {
+            return ("fix the errors")
+        }
+
         if (password === confirmPassword) {
             setErrors({});
             return dispatch(
@@ -56,35 +49,87 @@ function SignupFormModal() {
         });
     };
 
+    // Validation regex pattern for email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validation check for a valid email
+    const isValidEmail = (email) => emailRegex.test(email);
+
     return (
         <>
             <div id="signupBox">
                 <h1>Sign Up</h1>
                 <form className="signupForm" onSubmit={handleSubmit}>
                     <label className="signuplabel">
-                        Email
+                        <div className="label-errors">
+                            Email
+                            {errors.email && <p className="errors">{errors.email}</p>}
+
+                        </div>
                         <input
                             className="input-area"
                             type="text"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                let newEmail = e.target.value.trim()
+                                if (!isValidEmail(newEmail)) {
+                                    setErrors(prev => {
+                                        let err = { ...prev }
+                                        err.email = "Not a valid email"
+                                        setDisabled(true)
+                                        return err
+                                    })
+                                } else {
+                                    setErrors(prev => {
+                                        let err = { ...prev }
+                                        delete err.email
+                                        setDisabled(false)
+                                        return err
+                                    })
+                                }
+                                setEmail(newEmail)
+                            }}
                             required
                         />
                     </label>
-                    {errors.email && <p>{errors.email}</p>}
+
                     <label className="signuplabel">
-                        Username
+                        <div className="label-errors">
+                            Username
+                            {errors.username && <p className="errors">{errors.username}</p>}
+                        </div>
                         <input
                             className="input-area"
                             type="text"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => {
+                                let newUsername = e.target.value.trim()
+                                if (!newUsername || newUsername.length < 4 || newUsername.length > 20) {
+                                    setErrors(prev => {
+                                        let err = { ...prev };
+                                        err.username = "Not a valid username";
+                                        setDisabled(true);
+                                        return err;
+                                    })
+                                } else {
+                                    setErrors(prev => {
+                                        let err = { ...prev };
+                                        delete err.username;
+                                        setDisabled(false);
+                                        return err;
+                                    })
+                                }
+                                setUsername(newUsername)
+                            }}
                             required
                         />
                     </label>
-                    {errors.username && <p>{errors.username}</p>}
+
                     <label className="signuplabel">
-                        First Name
+                        <div className="label-errors">
+                            First Name
+                            {errors.firstName && <p className="errors">{errors.firstName}</p>}
+                        </div>
                         <input
                             className="input-area"
                             type="text"
@@ -93,9 +138,12 @@ function SignupFormModal() {
                             required
                         />
                     </label>
-                    {errors.firstName && <p>{errors.firstName}</p>}
+
                     <label className="signuplabel">
-                        Last Name
+                        <div className="label-errors">
+                            Last Name
+                            {errors.lastName && <p className="errors">{errors.lastName}</p>}
+                        </div>
                         <input
                             className="input-area"
                             type="text"
@@ -104,32 +152,74 @@ function SignupFormModal() {
                             required
                         />
                     </label>
-                    {errors.lastName && <p>{errors.lastName}</p>}
+
                     <label className="signuplabel">
-                        Password
+                        <div className="label-errors">
+                            Password
+                            {errors.password && <p className="errors">{errors.password}</p>}
+                        </div>
                         <input
                             className="input-area"
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                let password = e.target.value.trim();
+                                if (!password || password.length < 5 || password.length > 20) {
+                                    setErrors((prev) => {
+                                        let err = { ...prev };
+                                        err.password = "Not a valid password";
+                                        setDisabled(true);
+                                        return err;
+                                    });
+                                } else {
+                                    setErrors((prev) => {
+                                        let err = { ...prev };
+                                        delete err.password;
+                                        setDisabled(false);
+                                        return err;
+                                    });
+                                }
+                                setPassword(e.target.value);
+                            }}
                             required
                         />
                     </label>
-                    {errors.password && <p>{errors.password}</p>}
+
                     <label className="signuplabel">
-                        Confirm Password
+                        <div className="label-errors">
+                            Confirm Password
+                            {errors.confirmPassword && (
+                                <p className="errors">{errors.confirmPassword}</p>
+                            )}
+                        </div>
                         <input
                             className="input-area"
                             type="password"
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onChange={(e) => {
+                                let password2 = e.target.value.trim()
+                                if (password2 !== password) {
+                                    setErrors(prev => {
+                                        let err = { ...prev }
+                                        err.confirmPassword = "passwords don't match"
+                                        setDisabled(true)
+                                        return err
+                                    })
+                                } else {
+                                    setErrors(prev => {
+                                        let err = { ...prev }
+                                        delete err.confirmPassword
+                                        setDisabled(false)
+                                        return err
+                                    })
+                                }
+                                setConfirmPassword(e.target.value)
+                            }}
                             required
                         />
                     </label>
-                    {errors.confirmPassword && (
-                        <p>{errors.confirmPassword}</p>
-                    )}
-                    <button disabled={disabled} id="signupbutton" type="submit">Sign Up</button>
+
+                    <button disabled={disabled} id="signupbutton" className={disabled && "disabled"} type="submit">Sign Up</button>
 
                 </form>
             </div>
