@@ -9,6 +9,7 @@ import { getAllReviews } from '../../store/reviews';
 import { SpotShowReview } from './SpotShowReview';
 import OpenModalButton from '../OpenModalButton';
 import CreateReview from '../Reviews/CreateReview';
+import BookingModal from '../BookingModal';
 
 export const SpotShow = () => {
     const { spotId } = useParams();
@@ -80,7 +81,12 @@ export const SpotShow = () => {
                                         <p>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</p>
                                     </div>
                                 </div>
-                                <button className="reserve-button" type='button' onClick={(e) => { alert('Feature coming soon') }}>Reserve</button>
+                                <OpenModalButton
+                                    buttonText="Reserve"
+                                    className="reserve-button"
+                                    modalComponent={<BookingModal spot={spot} />}
+                                />
+
                             </div>
                         </div>
 
