@@ -7,6 +7,8 @@ import "./UserBookings.css"
 import PastBookings from "./PastBookings";
 import DeleteBookingModal from "../DeleteBookingModal";
 
+
+
 export default function UserBookings() {
     const dispatch = useDispatch();
     const history = useHistory()
@@ -20,34 +22,31 @@ export default function UserBookings() {
     }, [dispatch])
 
     let currentDate = new Date(new Date().setHours(0, 0, 0, 0))
-    let futureBookings = userBookings.filter(booking => {
-        let date = new Date(booking.startDate)
+    let futureBookings = userBookings
+        .filter(booking => {
+            let date = new Date(booking.startDate)
+            return date >= currentDate
+        })
+        .sort((a, b) => {
+            let aStart = new Date(a.startDate)
+            let bStart = new Date(b.startDate)
+            return aStart - bStart
+        })
 
-        return date >= currentDate
-    })
-
-    futureBookings = futureBookings.sort((a, b) => {
-        let aStart = new Date(a.startDate)
-        let bStart = new Date(b.startDate)
-        return aStart - bStart
-    })
-    let pastBookings = userBookings.filter(booking => {
-        let date = new Date(booking.endDate)
-        return date < currentDate
-    })
-    pastBookings.sort((a, b) => {
-
-        let aStart = new Date(a.startDate)
-        let bStart = new Date(b.startDate)
-        return bStart - aStart
-    })
+    let pastBookings = userBookings
+        .filter(booking => {
+            let endDate = new Date(booking.endDate);
+            return endDate < currentDate;
+        })
+        .sort((a, b) => {
+            let aStart = new Date(a.startDate);
+            let bStart = new Date(b.startDate);
+            return bStart - aStart;
+        });
 
 
     // if (!userBookings.length) return <></>
     if (loading) return <></>
-
-
-
 
     return (
         <div>

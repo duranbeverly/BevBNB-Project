@@ -37,37 +37,35 @@ export default function BookingModal({ spot }) {
         e.preventDefault();
 
         if (Object.values(errors).length) return;
-        let res = dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
-            // .then(() => history.push('/bookings/current'))
-            .catch(async (error) => {
-                console.log(error);
-                let serverErrors = {};
+        console.log("do we have an id?", spot.id)
 
-                if (error instanceof Response) {
-                    // Parse the error response body
-                    const errorBody = await error.json();
-                    serverErrors = errorBody.errors;
-                } else {
-                    serverErrors.message = "An error occurred";
-                }
+        let res = dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
+            .then(console.log("hello trying to make a booking", res))
+            // .then(() => history.push('/bookings/current'))
+            .catch(async (res) => {
+                console.log(res);
+                let error = await res.json()
+                error = error.errors;
 
                 let newErrors = {};
+                if (error && error.message === "Authentication required") {
+                    newErrors.message = "You must be logged in to request a booking"
+                }
+                if (error && error.endDate) {
+                    newErrors.end = error.endDate;
 
-                if (serverErrors.message === "Authentication required") {
-                    newErrors.message = "You must be logged in to request a booking";
                 }
-                if (serverErrors.endDate) {
-                    newErrors.end = serverErrors.endDate;
-                }
-                if (serverErrors.startDate) {
-                    newErrors.start = serverErrors.startDate;
-                }
-                if (!serverErrors) {
-                    newErrors.message = "You cannot book a reservation for your own spot.";
-                }
+                if (error && error.startDate) {
 
+                    newErrors.start = error.startDate;
+                }
+                if (!error) {
+
+                    newErrors.message = "You can not book a reservation for your own spot."
+                }
                 setErrors(newErrors);
-            });
+                return
+            })
 
 
 
