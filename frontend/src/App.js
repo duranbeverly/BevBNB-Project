@@ -8,6 +8,7 @@ import { SpotShow } from "./components/Spots/SpotShow";
 import { CreateSpot } from "./components/Spots/CreateSpot";
 import { CurrentSpots } from "./components/Spots/CurrentSpots";
 import { UpdateSpot } from "./components/Spots/UpdateSpot";
+import UserBookings from "./components/UserBookings";
 import Footer from "./components/Footer"
 
 function App() {
@@ -41,6 +42,9 @@ function App() {
         <Route exact path="/spots/:spotId">
           <SpotShow />
           <Footer />
+        </Route>
+        <Route exact path="/bookings">
+          <UserBookings />
         </Route>
         <Route>
           <h2>Page does not exist</h2>

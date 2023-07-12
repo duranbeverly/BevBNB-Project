@@ -90,10 +90,10 @@ function ProfileButton({ user }) {
             <ul className={ulClassName} ref={ulRef}>
                 {user ? (
                     <>
-                        <li className="log-in">Hello, {user.username}</li>
-                        <li className="log-in">{user.firstName} {user.lastName}</li>
-                        <li className="log-in">{user.email}</li>
-                        {hasSpots && <li className="log-in"><Link to='/spots/current'>Manage Spots</Link></li>}
+                        <li className="log-in">Hello, {user.firstName}</li>
+                        <li className="log-in line">{user.email}</li>
+                        {hasSpots && <li className="log-in line"><Link to='/spots/current'>Manage Spots</Link></li>}
+                        <li className="log-in line"><Link to='/bookings'>Trips</Link></li>
                         <li className="log-in-button">
                             <button className="logout-button" onClick={logout}>Log Out</button>
                         </li>

@@ -55,3 +55,12 @@
     display: flex;
     gap: 1rem;
 }
+
+.errors-inside {
+    display: flex;
+    justify-content: space-between;
+}
+
+.line {
+    border-bottom: #51636d6b 1px solid;
+}

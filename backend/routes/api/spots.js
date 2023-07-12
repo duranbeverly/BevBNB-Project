@@ -495,7 +495,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
 })
 
-//post edit a booking for a spot id
+//create a booking for a spot id
 
 router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, next) => {
     const { user } = req;

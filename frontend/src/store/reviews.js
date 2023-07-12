@@ -5,6 +5,7 @@ import { csrfFetch } from "./csrf"
 export const LOAD_REVIEWS = 'reviews/LOAD_REVIEWS'
 export const ADD_REVIEW = 'reviews/ADD_REVIEW'
 export const DELETE_REVIEW = 'reviews/DELETE_REVIEW'
+const CURR_REVIEWS = '/reviews/spotId'
 //action creators
 
 export const loadReviews = (reviews) => ({
@@ -16,6 +17,13 @@ export const addReview = (review) => ({
     type: ADD_REVIEW,
     review
 })
+
+export function getReviewsCurrent(data) {
+    return {
+        type: CURR_REVIEWS,
+        data
+    }
+}
 
 export const deleteReviews = (reviewId) => {
     return ({
@@ -58,6 +66,12 @@ export const createReview = (review, spotId, user) => async (dispatch) => {
     }
 }
 
+export const getReviewsCurrentThunk = () => async dispatch => {
+    const response = await csrfFetch('/api/reviews/current')
+    const data = await response.json();
+    dispatch(getReviewsCurrent(data))
+}
+
 export const deleteReview = (reviewId) => async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE'
@@ -90,6 +104,14 @@ export const reviewsReducer = (state = {}, action) => {
             let newState = { ...state }
             delete newState[action.reviewId]
             return newState
+        }
+        case CURR_REVIEWS: {
+            let newState = { ...state }
+            newState.user = {}
+            action.data.Reviews.forEach((review) => {
+                newState.user[review.id] = review;
+            })
+
         }
         default:
             return state
