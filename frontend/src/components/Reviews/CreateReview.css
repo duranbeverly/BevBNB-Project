@@ -70,3 +70,10 @@ h2 {
 .filled {
     color: #51636D;
 }
+
+@media (max-width:740px) {
+    .review-form {
+        width: 20rem;
+    }
+
+}
