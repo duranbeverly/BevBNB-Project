@@ -35,7 +35,7 @@ export default function UpcomingBookings({ booking, future }) {
 
     return (
         <div className="future-trip-card">
-            <img style={{ height: '12rem', width: '15rem', borderRadius: '10px 0 0 10px' }} src={preview}
+            <img src={preview}
                 onClick={() => history.push(`/spots/${spot.id}`)}
             />
 

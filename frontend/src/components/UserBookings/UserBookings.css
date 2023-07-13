@@ -5,7 +5,13 @@
 }
 
 .trips-wrapper {
+    display: flex;
+    flex-direction: column;
     padding: 0 1rem;
+}
+
+.trips-wrapper h1 {
+    width: 100%;
 }
 
 .upcoming-trip-div {
@@ -44,5 +50,16 @@
     .bookings-container {
         grid-template-columns: repeat(1, 1fr);
         /* 1 column for small screens */
+    }
+
+    .trips-wrapper {
+        align-items: center;
+        padding: 0;
+    }
+
+    .trips-wrapper h1 {
+        border-bottom: 1px solid #51636d71;
+        margin: 0;
+        padding: .5rem 0;
     }
 }

@@ -16,3 +16,23 @@
     border-radius: 0 10px 10px 0;
     width: 20rem;
 }
+
+.future-trip-card img {
+    height: 12rem;
+    width: 15rem;
+    border-radius: 10px 0 0 10px;
+}
+
+@media (max-width: 740px) {
+    .future-trip-card {
+        flex-direction: column;
+    }
+
+    .ubooking-text-container {
+        width: fit-content;
+    }
+
+    .future-trip-card img {
+        border-radius: 10px 10px 0 0;
+    }
+}
