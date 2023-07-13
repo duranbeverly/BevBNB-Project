@@ -14,6 +14,7 @@ export default function UserBookings() {
     const history = useHistory()
     const [loading, setLoading] = useState(true);
     const userBookings = Object.values(useSelector(state => state.bookings.user))
+    console.log("user Bookings here: ", userBookings)
 
     useEffect(() => {
         dispatch(getUserBookingsThunk()).then(() => {
@@ -33,6 +34,8 @@ export default function UserBookings() {
             return aStart - bStart
         })
 
+    console.log("future bookings", futureBookings)
+
     let pastBookings = userBookings
         .filter(booking => {
             let endDate = new Date(booking.endDate);
@@ -45,19 +48,17 @@ export default function UserBookings() {
         });
 
 
-    // if (!userBookings.length) return <></>
-    if (loading) return <></>
+
+    if (loading) return <div><h1>...Loading</h1></div>
 
     return (
         <div>
             <h1>Trips</h1>
             <div className="upcoming-trip-div">
                 <h2> Upcoming Trips</h2>
-                {!futureBookings.length && (
+                {futureBookings.length < 1 && (
                     <>
-                        <h3
-
-                            style={{ textAlign: "left", margin: 0 }}>No trips booked...yet!</h3>
+                        <h3>No trips booked...yet!</h3>
                         <p>Time to dust off your bags and start planning your next adventure</p>
                         <button id="booking-start-searching"
                             onClick={() => {

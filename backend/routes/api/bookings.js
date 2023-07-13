@@ -10,7 +10,7 @@ const { Op } = require('sequelize')
 router.get('/current', requireAuth, async (req, res, next) => {
     const { user } = req;
     let bookings = await Booking.findAll({
-        attributes: ['id', 'spotId'],
+        attributes: ['id', 'spotId', 'startDate', 'endDate'],
         where: {
             userId: user.id
         },

@@ -7,18 +7,17 @@ import CreateReview from "../Reviews/CreateReview";
 import DeleteBookingModal from "../DeleteBookingModal";
 import { useHistory } from "react-router-dom"
 import OpenModalButton from "../OpenModalButton";
+import "./UpcomingBookings.css"
 
 export default function UpcomingBookings({ booking, future }) {
     const dispatch = useDispatch();
     const history = useHistory()
     useEffect(() => {
         dispatch(getAllSpots()).then(dispatch(getReviewsCurrentThunk()))
-
     }, [dispatch])
 
     let spot = booking.Spot;
     let allSpots = Object.values(useSelector((state) => state.spots.allSpots))
-    // let allPreviewImages = allSpots.map(spot => spot.previewImage)
     let preview = allSpots.find(spot => spot.id === booking.spotId)
     if (preview) {
         preview = preview.previewImage;
@@ -26,74 +25,59 @@ export default function UpcomingBookings({ booking, future }) {
     let startDate = booking.startDate
     let endDate = booking.endDate
     let user = useSelector((state) => state.session.user)
-    let userSpotReview = Object.values(useSelector((state) => state.reviews.user))
+    let userSpotReview = Object.values(useSelector((state) => state.review.user))
     if (user) {
         userSpotReview = userSpotReview.filter((review) => review.userId === user.id && review.spotId === booking.spotId)
     }
     let userReviewed = userSpotReview.length;
 
+    if (!spot) return <div>...Loading</div>
 
-    let startMonth = startDate.slice(5, 7)
-    let endMonth = endDate.slice(5, 7)
-    let startDay = startDate.slice(8)
-    let endDay = endDate.slice(8)
-    let startYear = startDate.slice(0, 4)
-    let endYear = endDate.slice(0, 4)
-    const months = {
-        "01": "January",
-        "02": "February",
-        "03": "March",
-        "04": "April",
-        "05": "May",
-        "06": "June",
-        "07": "July",
-        "08": "August",
-        "09": "September",
-        "10": "October",
-        "11": "November",
-        "12": "December"
-    }
+    return (
+        <div className="future-trip-card">
+            <img style={{ height: '12rem', width: '20%' }} src={preview}
+                onClick={() => history.push(`/spots/${spot.id}`)}
+            />
 
-    if (!spot) return <></>
+            <div id="booking-text-container">
+                <h3 className="booking-text"
+                    onClick={() => history.push(`/spots/${spot.id}`)}>{spot.city}
+                </h3>
+                <h4 className="booking-text"
+                    onClick={() => history.push(`/spots/${spot.id}`)}>{spot.name}
+                </h4>
+                <ul id="booking-dates-container">
+                    {future && (
+                        <div>
+                            <div className="booking-dates">
+                                <p>Reservation begins:
+                                    <span> </span>
+                                    {new Date(startDate).toLocaleDateString("en-US", {
+                                        month: "long",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })}
 
-    return <>
-        {/* <BookingSpotDetail spot={spot} /> */}
-        <img src={preview}
-            onClick={() => history.push(`/spots/${spot.id}`)}
-        ></img>
-
-        <div id="booking-text-container">
-            <h3 className="booking-text"
-                onClick={() => history.push(`/spots/${spot.id}`)}>{spot.city}
-            </h3>
-            <h4 className="booking-text"
-                onClick={() => history.push(`/spots/${spot.id}`)}>{spot.name}
-            </h4>
-            <ul id="booking-dates-container">
-                {future && (<>
-                    <li className="booking-dates">Reservation begins {`${months[startMonth]} ${startDay}, ${startYear}`}</li>
-                    <li className="booking-dates">Ends {`${months[endMonth]} ${endDay}, ${endYear}`}</li>
-                    <OpenModalButton buttonText="Cancel booking"
-                        modalComponent={<DeleteBookingModal bookingId={booking.id} />} />
-                    {/* <button>
-                        <OpenModalMenuItem
-                            itemText="Cancel booking"
-                            modalComponent={/>}
-                                />
-
-                    </button> */}
-                </>)}
-                {!future && (<>
-                    <li className="booking-dates"> Started {`${months[startMonth]} ${startDay}, ${startYear}`}</li>
-                    <li className="booking-dates">Ended {`${months[endMonth]} ${endDay}, ${endYear}`}</li>
-                    {!userReviewed && (<>
-
-                        <OpenModalButton buttonText="Post your Review"
-                            modalComponent={<CreateReview spotInfo={spot} />} />
-                    </>)}
-                </>)}
-
-            </ul>
+                                </p>
+                            </div>
+                            <div className="booking-dates">
+                                <p>Ends:
+                                    <span> </span>
+                                    {new Date(endDate).toLocaleDateString("en-US", {
+                                        month: "long",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    })}
+                                </p>
+                            </div>
+                            <OpenModalButton
+                                buttonText="Cancel booking"
+                                modalComponent={<DeleteBookingModal bookingId={booking.id} />}
+                            />
+                        </div>
+                    )}
+                </ul>
+            </div>
         </div>
-    </>
+    );
 }

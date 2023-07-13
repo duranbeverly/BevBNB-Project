@@ -85,24 +85,34 @@ export const deleteReview = (reviewId) => async (dispatch) => {
 
 }
 //create a reducer
-
-export const reviewsReducer = (state = {}, action) => {
+const initialState = { spot: {}, user: {} }
+export const reviewsReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case LOAD_REVIEWS: {
-            const newState = {}
+            let newState = { ...state }
+            newState.spot = { ...newState.spot }
+            newState.user = { ...newState.user }
             action.reviews.Reviews.forEach((review) => {
-                newState[review.id] = review;
+                newState.spot[review.id] = review;
             })
 
             return newState;
         }
         case ADD_REVIEW: {
-            return { ...state, [action.review.id]: action.review }
+            let newState = { ...state }
+            newState.spot = { ...newState.spot }
+            newState.user = { ...newState.user }
+            newState.spot[action.review.id] = action.review
+            return newState
+
         }
         case DELETE_REVIEW: {
             let newState = { ...state }
-            delete newState[action.reviewId]
+            newState.spot = { ...newState.spot }
+            newState.user = { ...newState.user }
+            delete newState.spot[action.reviewId]
+            delete newState.user[action.reviewId]
             return newState
         }
         case CURR_REVIEWS: {

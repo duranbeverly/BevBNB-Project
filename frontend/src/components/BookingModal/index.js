@@ -11,7 +11,9 @@ export default function BookingModal({ spot }) {
     const dispatch = useDispatch();
     const history = useHistory();
     const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    // Calculate minimum date for the end date picker
+    const minEndDate = startDate ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) : null;
+    const [endDate, setEndDate] = useState(minEndDate);
     const [errors, setErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false)
     const { closeModal } = useModal();
@@ -25,8 +27,6 @@ export default function BookingModal({ spot }) {
 
     }, [startDate, endDate])
 
-    // Calculate minimum date for the end date picker
-    const minEndDate = startDate ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) : null;
 
     useEffect(() => {
         setEndDate(minEndDate)
@@ -38,13 +38,13 @@ export default function BookingModal({ spot }) {
 
         if (Object.values(errors).length) return;
         console.log("do we have an id?", spot.id)
+        console.log("type of id ", typeof (spot.id))
 
-        let res = dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
-            .then(console.log("hello trying to make a booking", res))
+        dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
             // .then(() => history.push('/bookings/current'))
             .catch(async (res) => {
-                console.log(res);
                 let error = await res.json()
+                console.log("what is res", error)
                 error = error.errors;
 
                 let newErrors = {};

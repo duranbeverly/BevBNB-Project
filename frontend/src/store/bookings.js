@@ -14,10 +14,10 @@ export const loadBookings = (id, data) => {
     }
 }
 
-export const createBooking = (booking, id) => {
+export const createBooking = (data, id) => {
     return ({
         type: CREATE_BOOKING,
-        booking,
+        data,
         id
     })
 }
@@ -45,6 +45,7 @@ export const getBookingsThunk = (id) => async dispatch => {
 }
 
 export const createBookingThunk = (id, data) => async dispatch => {
+    console.log("in thunk ", id, data)
     const response = await csrfFetch(`/api/spots/${id}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
