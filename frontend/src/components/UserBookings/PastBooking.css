@@ -1,0 +1,12 @@
+.booking-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: .5rem 0;
+}
+
+.past-trip-card {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}

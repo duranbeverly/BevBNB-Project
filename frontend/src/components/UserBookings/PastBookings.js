@@ -5,6 +5,7 @@ import { getReviewsCurrentThunk } from "../../store/reviews";
 import CreateReview from "../Reviews/CreateReview";
 import { useHistory } from "react-router-dom"
 import OpenModalButton from "../OpenModalButton";
+import "./PastBooking.css"
 
 export default function PastBookings({ booking }) {
     const dispatch = useDispatch();
@@ -24,61 +25,52 @@ export default function PastBookings({ booking }) {
     let startDate = booking.startDate
     let endDate = booking.endDate
     let user = useSelector((state) => state.session.user)
-    let userSpotReview = Object.values(useSelector((state) => state.reviews.user))
+    let userSpotReview = Object.values(useSelector((state) => state.review.user))
     if (user) {
         userSpotReview = userSpotReview.filter((review) => review.userId === user.id && review.spotId === booking.spotId)
     }
     let userReviewed = userSpotReview.length;
 
 
-    let startMonth = startDate.slice(5, 7)
-    let endMonth = endDate.slice(5, 7)
-    let startDay = startDate.slice(8)
-    let endDay = endDate.slice(8)
-    let startYear = startDate.slice(0, 4)
-    let endYear = endDate.slice(0, 4)
-    const months = {
-        "01": "January",
-        "02": "February",
-        "03": "March",
-        "04": "April",
-        "05": "May",
-        "06": "June",
-        "07": "July",
-        "08": "August",
-        "09": "September",
-        "10": "October",
-        "11": "November",
-        "12": "December"
-    }
+    if (!spot) return <div>...Loading</div>
 
-    if (!spot) return <></>
+    return (
+        <div className="past-trip-card">
+            {/* <BookingSpotDetail spot={spot} /> */}
+            <img style={{ height: '5rem', width: '5rem' }} src={preview}
+                onClick={() => history.push(`/spots/${spot.id}`)}
+            ></img>
 
-    return <>
-        {/* <BookingSpotDetail spot={spot} /> */}
-        <img src={preview}
-            onClick={() => history.push(`/spots/${spot.id}`)}
-        ></img>
+            <div className="booking-text-container">
+                <div className="booking-dates-container">
+                    <h3 style={{ fontSize: '14px', margin: '0' }} className="booking-text"
+                        onClick={() => history.push(`/spots/${spot.id}`)}>{spot.city}
+                    </h3>
+                    <div className="booking-dates">
+                        <p style={{ fontSize: '12px', margin: '0' }}>
+                            {new Date(startDate).toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                            })}
+                            <span> - </span>
+                            {new Date(endDate).toLocaleDateString("en-US", {
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                            })}
 
-        <div id="booking-text-container">
-            <h3 className="booking-text"
-                onClick={() => history.push(`/spots/${spot.id}`)}>{spot.city}
-            </h3>
-            <h4 className="booking-text"
-                onClick={() => history.push(`/spots/${spot.id}`)}>{spot.name}
-            </h4>
-            <ul id="booking-dates-container">
-                <>
-                    <li className="booking-dates"> Started {`${months[startMonth]} ${startDay}, ${startYear}`}</li>
-                    <li className="booking-dates">Ended {`${months[endMonth]} ${endDay}, ${endYear}`}</li>
-                    {!userReviewed && (<>
+                        </p>
+                    </div >
+                </div>
+                {!userReviewed && (<div >
 
-                        <OpenModalButton buttonText="Post your Review"
-                            modalComponent={<CreateReview spotInfo={spot} />} />
-                    </>)}
-                </>
-
-            </ul>
+                    <OpenModalButton buttonText="Post your Review"
+                        modalComponent={<CreateReview spotInfo={spot} />}
+                        style={{ fontSize: '10px', height: '1.5rem' }}
+                    />
+                </div>)}
+            </div>
         </div>
-    </>
+    )
 }

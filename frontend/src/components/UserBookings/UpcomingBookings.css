@@ -1,4 +1,18 @@
 .future-trip-card {
     display: flex;
-    gap: 1rem;
+    margin-bottom: 1rem;
+    width: fit-content;
+    border-radius: 10px;
+    /* border: 1px solid #51636d0e; */
+    box-shadow: #6e7477 -3px 5px 11px;
+}
+
+.ubooking-text-container {
+    padding: .7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border: 1px solid #51636D; */
+    border-radius: 0 10px 10px 0;
+    width: 20rem;
 }

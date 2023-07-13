@@ -1,0 +1,14 @@
+.bookings-container {
+    display: grid;
+}
+
+.upcoming-trip-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.booking-tile {
+    display: flex;
+
+}

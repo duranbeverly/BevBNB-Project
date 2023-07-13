@@ -35,18 +35,21 @@ export default function UpcomingBookings({ booking, future }) {
 
     return (
         <div className="future-trip-card">
-            <img style={{ height: '12rem', width: '20%' }} src={preview}
+            <img style={{ height: '12rem', width: '15rem', borderRadius: '10px 0 0 10px' }} src={preview}
                 onClick={() => history.push(`/spots/${spot.id}`)}
             />
 
-            <div id="booking-text-container">
-                <h3 className="booking-text"
+            <div className="ubooking-text-container">
+                <h3
+                    style={{ margin: '0' }}
+                    className="booking-text"
                     onClick={() => history.push(`/spots/${spot.id}`)}>{spot.city}
                 </h3>
                 <h4 className="booking-text"
+                    style={{ fontSize: '14px', margin: '0' }}
                     onClick={() => history.push(`/spots/${spot.id}`)}>{spot.name}
                 </h4>
-                <ul id="booking-dates-container">
+                <div id="booking-dates-container">
                     {future && (
                         <div>
                             <div className="booking-dates">
@@ -76,7 +79,7 @@ export default function UpcomingBookings({ booking, future }) {
                             />
                         </div>
                     )}
-                </ul>
+                </div>
             </div>
         </div>
     );
