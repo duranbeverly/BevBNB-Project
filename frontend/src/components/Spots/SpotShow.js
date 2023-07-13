@@ -14,7 +14,7 @@ import BookingModal from '../BookingModal';
 export const SpotShow = () => {
     const { spotId } = useParams();
     const spot = useSelector(state => state.spots.allSpots[spotId])
-    const review = useSelector(state => state.review)
+    const review = useSelector(state => state.review.spot)
     const user = useSelector(state => state.session.user);
 
     const dispatch = useDispatch()
