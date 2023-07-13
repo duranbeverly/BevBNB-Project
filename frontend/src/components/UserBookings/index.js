@@ -52,7 +52,7 @@ export default function UserBookings() {
     if (loading) return <div><h1>...Loading</h1></div>
 
     return (
-        <div>
+        <div className="trips-wrapper">
             <h1>Trips</h1>
             <div className="upcoming-trip-div">
                 <h2> Upcoming Trips</h2>

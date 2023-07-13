@@ -67,7 +67,7 @@ export default function PastBookings({ booking }) {
 
                     <OpenModalButton buttonText="Post your Review"
                         modalComponent={<CreateReview spotInfo={spot} />}
-                        style={{ fontSize: '10px', height: '1.5rem' }}
+                        style={{ fontSize: '10px', height: '1.5rem', borderRadius: '6px' }}
                     />
                 </div>)}
             </div>

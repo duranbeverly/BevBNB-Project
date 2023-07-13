@@ -12,3 +12,15 @@
     display: flex;
 
 }
+
+.trips-wrapper {
+    padding: 0 1rem;
+}
+
+.upcoming-trip-div {
+    padding: 0 1rem;
+}
+
+.past-trip-div {
+    padding: 0 1rem;
+}

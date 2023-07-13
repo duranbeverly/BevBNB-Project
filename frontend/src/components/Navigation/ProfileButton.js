@@ -92,8 +92,8 @@ function ProfileButton({ user }) {
                     <>
                         <li className="log-in">Hello, {user.firstName}</li>
                         <li className="log-in line">{user.email}</li>
-                        {hasSpots && <li className="log-in line"><Link to='/spots/current'>Manage Spots</Link></li>}
-                        <li className="log-in line"><Link to='/bookings'>Trips</Link></li>
+                        {hasSpots && <li className="log-in line"><Link to='/spots/current' onClick={closeMenu}>Manage Spots</Link></li>}
+                        <li className="log-in line"><Link to='/bookings' onClick={closeMenu}>Trips</Link></li>
                         <li className="log-in-button">
                             <button className="logout-button" onClick={logout}>Log Out</button>
                         </li>
