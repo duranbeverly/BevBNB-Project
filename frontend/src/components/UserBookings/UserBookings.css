@@ -1,16 +1,7 @@
-.bookings-container {
-    display: grid;
-}
-
 .upcoming-trip-div {
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.booking-tile {
-    display: flex;
-
 }
 
 .trips-wrapper {
@@ -21,6 +12,37 @@
     padding: 0 1rem;
 }
 
+/* this div includes the title of the section, bookings-container and all the booking tiles  */
 .past-trip-div {
     padding: 0 1rem;
+}
+
+/* this is one level in the past-trip-div and contains all the booking tiles */
+.bookings-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 columns by default */
+}
+
+/* each individual card */
+.booking-tile {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+/* Media query for screens between 1150px and 740px */
+@media (max-width: 1150px) {
+    .bookings-container {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns for medium-sized screens */
+    }
+}
+
+/* Media query for screens less than 740px */
+@media (max-width: 740px) {
+    .bookings-container {
+        grid-template-columns: repeat(1, 1fr);
+        /* 1 column for small screens */
+    }
 }

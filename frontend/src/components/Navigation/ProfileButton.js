@@ -6,10 +6,10 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { getCurrentUserSpots } from "../../store/spots";
-import { resetCurrentUserSpots } from "../../store/spots";
+import { useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
-
+    const history = useHistory()
     const spotsObj = useSelector(state => state.spots.allSpots) //getting from single state (clears out when you refresh page)
     const currentUsersSpots = useSelector(state => state.spots.currentUserSpots)
     const spots = Object.values(spotsObj)
@@ -72,7 +72,7 @@ function ProfileButton({ user }) {
     const logout = (e) => {
         e.preventDefault();
         dispatch(sessionActions.logout())
-
+        history.push('/')
 
         closeMenu();
     };

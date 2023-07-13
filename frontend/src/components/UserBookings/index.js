@@ -14,7 +14,7 @@ export default function UserBookings() {
     const history = useHistory()
     const [loading, setLoading] = useState(true);
     const userBookings = Object.values(useSelector(state => state.bookings.user))
-    console.log("user Bookings here: ", userBookings)
+    console.log("user Bookings here: ", userBookings) 
 
     useEffect(() => {
         dispatch(getUserBookingsThunk()).then(() => {
