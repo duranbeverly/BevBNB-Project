@@ -41,7 +41,7 @@ export default function BookingModal({ spot }) {
         console.log("type of id ", typeof (spot.id))
 
         dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
-            // .then(() => history.push('/bookings/current'))
+            .then(() => history.push('/bookings'))
             .catch(async (res) => {
                 let error = await res.json()
                 console.log("what is res", error)
