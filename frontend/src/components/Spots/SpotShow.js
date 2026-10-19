@@ -13,6 +13,8 @@ import CreateReview from '../Reviews/CreateReview';
 import BookingModal from '../BookingModal';
 import LoginFormModal from '../LoginFormModal';
 
+const COMING_SOON = "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg";
+
 export const SpotShow = () => {
     const { spotId } = useParams();
     const spot = useSelector(state => state.spots.allSpots[spotId])
@@ -42,24 +44,33 @@ export const SpotShow = () => {
 
     const userRepeat = reviewArray?.find(review => review.userId === user?.id)
     if (!reviewArray) return null
-    if (!spot) {
-        return null
+    if (!spot || !spot.Owner) {
+        return (
+            <div className='single-spot-body'>
+                <div className='wrapper'>
+                    <h1>Spot not found</h1>
+                    <p>This listing may have been removed. <Link to='/'>Browse all spots</Link></p>
+                </div>
+            </div>
+        )
     }
+    const isOwner = !!user && user.id === spot.ownerId
 
     return (
         <>
             <div className='single-spot-body'>
                 <div className='wrapper'>
                     <h1>{spot?.name}</h1>
+                    {isOwner && <span className='owner-badge owner-badge-inline'>Your listing</span>}
                     <h2 className='no-margin'>{spot?.city}, {spot?.state}, {spot?.country}</h2>
                     <div className='center'>
                         <div className='images'>
-                            <img id="image" src={img(spot?.SpotImages[0]?.url, 1400)} alt={spot?.name} fetchpriority="high"></img>
+                            <img id="image" src={img(spot?.SpotImages[0]?.url || COMING_SOON, 1400)} alt={spot?.name} fetchpriority="high"></img>
                             <div className='grid-images'>
-                                <img className="small-image" loading="lazy" src={img(spot?.SpotImages[1]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg", 700)} ></img>
-                                <img className="small-image" loading="lazy" src={img(spot?.SpotImages[2]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg", 700)} ></img>
-                                <img className="small-image" loading="lazy" src={img(spot?.SpotImages[3]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg", 700)}></img>
-                                <img className="small-image" loading="lazy" src={img(spot?.SpotImages[4]?.url || "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg", 700)}></img>
+                                <img className="small-image" loading="lazy" alt="" src={img(spot?.SpotImages[1]?.url || COMING_SOON, 700)}></img>
+                                <img className="small-image" loading="lazy" alt="" src={img(spot?.SpotImages[2]?.url || COMING_SOON, 700)}></img>
+                                <img className="small-image" loading="lazy" alt="" src={img(spot?.SpotImages[3]?.url || COMING_SOON, 700)}></img>
+                                <img className="small-image" loading="lazy" alt="" src={img(spot?.SpotImages[4]?.url || COMING_SOON, 700)}></img>
                             </div>
                         </div>
 
@@ -83,7 +94,15 @@ export const SpotShow = () => {
                                         <p>{`${spot.numReviews} review${spot.numReviews !== 1 ? 's' : ''}`}</p>
                                     </div>
                                 </div>
-                                {user ? (
+                                {isOwner ? (
+                                    <div className='owner-note'>
+                                        <p>This is your listing, so you can't book it.</p>
+                                        <div className='owner-links'>
+                                            <Link className='owner-link primary' to={`/spots/${spot.id}/edit`}>Edit listing</Link>
+                                            <Link className='owner-link' to='/spots/current'>Manage spots</Link>
+                                        </div>
+                                    </div>
+                                ) : user ? (
                                     <OpenModalButton
                                         buttonText="Reserve"
                                         className="reserve-button"
@@ -107,7 +126,7 @@ export const SpotShow = () => {
                     <div className='reviews'>
 
 
-                        {user && user?.firstName != spot.Owner.firstName && !userRepeat ? (
+                        {user && !isOwner && !userRepeat ? (
                             <>
                                 <div className='top-reviews'>
                                     <div className='rating'>

@@ -84,3 +84,41 @@ img {
     margin-top: 30px;
     margin-left: 30px;
 }
+
+/* "Your listing" badge for spots the logged-in user owns */
+.image-box {
+    position: relative;
+}
+
+.owner-badge {
+    display: inline-block;
+    background-color: #ff5a5f;
+    color: white;
+    font-family: 'Comfortaa', cursive;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 4px rgb(133, 117, 117);
+}
+
+.owner-badge-card {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1;
+}
+
+/* keep cards inside a phone-width screen */
+@media only screen and (max-width: 420px) {
+    .image-card {
+        width: calc(100vw - 2rem);
+        height: auto;
+    }
+
+    .image-box {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}

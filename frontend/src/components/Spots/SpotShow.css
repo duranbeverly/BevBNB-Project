@@ -264,3 +264,39 @@ h2.title-spots {
         width: 100%;
     }
 }
+
+.owner-badge-inline {
+    align-self: flex-start;
+    margin-bottom: 10px;
+}
+
+.owner-note p {
+    margin: 10px 0;
+}
+
+.owner-links {
+    display: flex;
+    column-gap: 10px;
+}
+
+.owner-link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    border-radius: 15px;
+    border: #51636D 1px solid;
+    color: #51636D;
+    font-family: 'Comfortaa', cursive;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 4px 3px 5px rgb(133, 117, 117);
+}
+
+.owner-link.primary {
+    background-color: #ff5a5f;
+    border: none;
+    color: white;
+}

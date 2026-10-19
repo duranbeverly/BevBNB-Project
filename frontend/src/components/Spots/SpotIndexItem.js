@@ -1,19 +1,21 @@
 import { img } from "../../utils/img";
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import "./Spot.css"
 
+const COMING_SOON = "https://res.cloudinary.com/dnzxq7dgk/image/upload/v1683912193/App%20Academy%20Front%20End%20Project/other_assets/coming_soon_dfutsv.jpg";
+
 
 export const SpotIndexItem = ({ spot }) => {
-    const dispatch = useDispatch();
+    const user = useSelector(state => state.session.user);
+    const isOwner = !!user && user.id === spot.ownerId;
 
-    //give this div a key
     return (
         <div className='image-card' title={spot.name}>
             <Link className="link" to={`/spots/${spot.id}`}>
                 <div className='image-box'>
-                    <img src={img(spot.previewImage, 600)} alt={spot.name} loading="lazy" decoding="async" />
+                    {isOwner && <span className='owner-badge owner-badge-card'>Your listing</span>}
+                    <img src={img(spot.previewImage || COMING_SOON, 600)} alt={spot.name} loading="lazy" decoding="async" />
                 </div>
                 <div className='spot-info'>
                     <h2 className='title-spots'>{spot.name}</h2>
