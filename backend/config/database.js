@@ -1,6 +1,11 @@
 // backend/config/database.js
 const config = require('./index');
 
+// Neon connection strings may include channel_binding, which node-postgres doesn't accept.
+if (process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.DATABASE_URL.replace(/([?&])channel_binding=[^&]*&?/, '$1').replace(/[?&]$/, '');
+}
+
 module.exports = {
   development: {
     storage: config.dbFile,
