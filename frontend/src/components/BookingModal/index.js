@@ -11,7 +11,9 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function BookingModal({ spot }) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const [startDate, setStartDate] = useState(new Date());
+    // Default to tomorrow: a trip that starts today counts as already started and can't be cancelled.
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const [startDate, setStartDate] = useState(tomorrow);
     // Calculate minimum date for the end date picker
     const minEndDate = startDate ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) : null;
     const [endDate, setEndDate] = useState(minEndDate);
@@ -72,8 +74,12 @@ export default function BookingModal({ spot }) {
                 <DatePicker
                     selected={startDate}
                     className="date-input"
-                    onChange={(date) => setStartDate(date)}
+                    onChange={(date) => {
+                        setStartDate(date);
+                        if (date && endDate && endDate <= date) setEndDate(new Date(date.getTime() + 24 * 60 * 60 * 1000));
+                    }}
                     minDate={new Date()}
+                    popperProps={{ strategy: "fixed" }}
                 />
                 <i className="fa-regular fa-calendar"></i>
             </label>
@@ -88,6 +94,7 @@ export default function BookingModal({ spot }) {
                     className="date-input"
                     onChange={(date) => setEndDate(date)}
                     minDate={minEndDate}
+                    popperProps={{ strategy: "fixed" }}
                 />
                 <i className="fa-regular fa-calendar"></i>
             </label>
