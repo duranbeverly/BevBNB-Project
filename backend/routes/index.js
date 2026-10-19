@@ -18,6 +18,8 @@ if (process.env.NODE_ENV === 'production') {
   });
 
   // Serve the static assets in the frontend's build folder
+  // Vite puts a content hash in every file name under /assets, so browsers can keep them for a year.
+  router.use('/assets', express.static(path.resolve("../frontend/build/assets"), { immutable: true, maxAge: '1y' }));
   router.use(express.static(path.resolve("../frontend/build")));
 
   // Serve the frontend's index.html file at all other routes NOT starting with /api

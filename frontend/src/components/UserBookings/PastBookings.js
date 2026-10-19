@@ -1,3 +1,4 @@
+import { img } from "../../utils/img";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllSpots } from "../../store/spots";
 import { useEffect } from "react";
@@ -37,7 +38,7 @@ export default function PastBookings({ booking }) {
     return (
         <div className="past-trip-card">
             {/* <BookingSpotDetail spot={spot} /> */}
-            <img style={{ height: '5rem', width: '5rem' }} src={preview}
+            <img style={{ height: '5rem', width: '5rem' }} src={img(preview, 200)} loading="lazy"
                 onClick={() => history.push(`/spots/${spot.id}`)}
             ></img>
 

@@ -13,6 +13,7 @@ const isProduction = environment === 'production';
 
 const app = express();
 
+app.use(require('compression')()); // gzip API responses and the app bundle
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());

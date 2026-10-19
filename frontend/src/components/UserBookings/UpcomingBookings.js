@@ -1,3 +1,4 @@
+import { img } from "../../utils/img";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllSpots } from "../../store/spots";
 import { useEffect } from "react";
@@ -35,7 +36,7 @@ export default function UpcomingBookings({ booking, future }) {
 
     return (
         <div className="future-trip-card">
-            <img src={preview}
+            <img src={img(preview, 600)} loading="lazy"
                 onClick={() => history.push(`/spots/${spot.id}`)}
             />
 

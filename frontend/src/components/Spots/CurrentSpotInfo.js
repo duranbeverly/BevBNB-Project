@@ -1,3 +1,4 @@
+import { img } from "../../utils/img";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom'
@@ -14,7 +15,7 @@ export const CurrentSpotInfo = ({ currentSpot }) => {
             <div className='image-card' title={currentSpot.name} key={`${currentSpot.id}`}>
                 <Link className="link" to={`/spots/${currentSpot.id}`}>
                     <div className='image-box'>
-                        <img src={currentSpot.previewImage} />
+                        <img src={img(currentSpot.previewImage, 600)} alt={currentSpot.name} loading="lazy" decoding="async" />
                     </div>
                     <div className='spot-info'>
                         <h2 className='title-spots'>{currentSpot.name}</h2>
