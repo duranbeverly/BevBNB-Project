@@ -300,3 +300,89 @@ h2.title-spots {
     border: none;
     color: white;
 }
+
+/* phones: full width main photo with a 2x2 grid of small photos below */
+@media only screen and (max-width: 768px) {
+    .wrapper {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+        align-self: stretch;
+    }
+
+    .wrapper h1 {
+        font-size: 24px;
+        line-height: 1.2;
+        margin: 16px 0 8px;
+    }
+
+    .wrapper h2.no-margin {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .center {
+        display: block;
+    }
+
+    .images {
+        flex-direction: column;
+        row-gap: .5rem;
+        width: 100%;
+    }
+
+    #image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+
+    .grid-images {
+        width: 100%;
+        grid-template-rows: auto auto;
+    }
+
+    .small-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .top-info {
+        margin-top: 1.5rem;
+    }
+
+    .reserve-area {
+        margin-left: 0;
+    }
+
+    .reserve-button,
+    .small-button {
+        min-height: 44px;
+    }
+
+    .dot-from-hell {
+        font-size: 30px;
+        margin-bottom: 30px;
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    .top-reviews {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .top-reviews h2 {
+        font-size: 18px;
+    }
+
+    .single-review {
+        overflow-wrap: anywhere;
+    }
+}

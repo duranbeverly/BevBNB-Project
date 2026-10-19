@@ -155,3 +155,43 @@
         padding-left: 0;
     }
 }
+
+/* "Create a Spot" lives in the account menu on phones only */
+.menu-create-spot {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .navbar {
+        padding: 0 16px 0 8px;
+        margin: 0;
+    }
+
+    .create-spot-text {
+        display: none;
+    }
+
+    .navButton {
+        min-height: 40px;
+        min-width: 64px;
+    }
+
+    .profile-dropdown {
+        right: 16px;
+        max-width: calc(100vw - 32px);
+        box-sizing: border-box;
+    }
+
+    .profile-dropdown li {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-dropdown li a {
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+        width: 100%;
+    }
+}

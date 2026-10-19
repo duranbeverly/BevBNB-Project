@@ -63,6 +63,7 @@ function ProfileButton({ user }) {
                     <>
                         <li className="log-in">Hello, {user.firstName}</li>
                         <li className="log-in line">{user.email}</li>
+                        <li className="log-in line menu-create-spot"><Link to='/spots/new' onClick={closeMenu}>Create a Spot</Link></li>
                         <li className="log-in line"><Link to='/spots/current' onClick={closeMenu}>Manage Spots</Link></li>
                         <li className="log-in line"><Link to='/bookings' onClick={closeMenu}>Trips</Link></li>
                         <li className="log-in-button">

@@ -28,3 +28,37 @@
     max-height: calc(100vh - 20px);
     overflow-y: auto;
 }
+
+/* phones: modals stay inside the screen and scroll when tall */
+@media only screen and (max-width: 768px) {
+    #modal-content {
+        max-width: calc(100vw - 32px);
+        max-height: calc(100vh - 32px);
+        max-height: calc(100dvh - 32px);
+        border-radius: 20px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #modal-content .review-form,
+    #modal-content #signupBox {
+        width: min(20rem, calc(100vw - 32px));
+        max-width: 100%;
+    }
+
+    #modal-content .modal-delete {
+        width: auto;
+        max-width: calc(100vw - 62px);
+    }
+
+    #modal-content .input-area,
+    #modal-content .review-input,
+    #modal-content .date-input {
+        min-height: 40px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    #modal-content .link {
+        padding: 10px 0;
+    }
+}

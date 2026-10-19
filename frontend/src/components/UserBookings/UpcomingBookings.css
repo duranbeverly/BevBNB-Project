@@ -41,3 +41,21 @@
     font-weight: bold;
     margin: 0;
 }
+
+@media only screen and (max-width: 768px) {
+    .future-trip-card {
+        width: 100%;
+        max-width: 22rem;
+    }
+
+    .future-trip-card img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .ubooking-text-container {
+        width: auto;
+        box-sizing: border-box;
+    }
+}

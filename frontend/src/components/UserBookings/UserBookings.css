@@ -67,3 +67,17 @@
 .trips-error {
     font-size: 14px;
 }
+
+@media only screen and (max-width: 768px) {
+    .bookings-container {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    .upcoming-trip-div,
+    .past-trip-div {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

@@ -69,3 +69,19 @@ h4 {
     font-family: "Manjari", sans-serif;
     color: #51636D;
 }
+
+@media only screen and (max-width: 768px) {
+    .footer {
+        padding: 1rem 16px;
+        height: auto;
+        min-height: 4rem;
+    }
+
+    .social-media-div a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        min-height: 40px;
+    }
+}

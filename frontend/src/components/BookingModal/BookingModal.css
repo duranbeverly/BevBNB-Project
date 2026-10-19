@@ -69,3 +69,21 @@
     transform: translateY(-50%);
     cursor: pointer;
 }
+
+@media only screen and (max-width: 768px) {
+    .fa-calendar {
+        top: 2.35rem;
+    }
+
+    .react-datepicker__day,
+    .react-datepicker__day-name {
+        width: 2.2rem;
+        line-height: 2.2rem;
+        margin: .1rem;
+    }
+
+    .react-datepicker__navigation {
+        width: 2rem;
+        height: 2rem;
+    }
+}
