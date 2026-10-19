@@ -14,7 +14,7 @@
 ## About
 BevBnB is an application for booking some very unique spots in the United States, that centers on bringing people back to nature and away from the hustle and bustle of busy city lives.
 
-**Live demo:** https://bevbnb.onrender.com (use **Demo User** on the login screen; the free server can take up to a minute to wake up).
+**Live demo:** https://bevbnb-la31.onrender.com (use **Demo User** on the login screen; the free server can take up to a minute to wake up).
 
 ### 2026 update
 - Front end moved from Create React App to **Vite** and React 18's `createRoot`.
