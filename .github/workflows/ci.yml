@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-smoke-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      DB_SSL: "false"
+      SCHEMA: bevbnb_schema
+      JWT_SECRET: ci-only-secret
+      JWT_EXPIRES_IN: "604800"
+      PORT: "8000"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm install
+      - name: Build the frontend
+        run: npm run render-postbuild
+      - name: Create schema, migrate and seed
+        run: |
+          npm run build
+          npm run sequelize --prefix backend db:migrate
+          npm run sequelize --prefix backend db:seed:all
+      - name: Start the server
+        run: |
+          npm start > server.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf localhost:8000/api/spots > /dev/null && break; sleep 1; done
+      - name: Smoke test
+        run: |
+          curl -sf localhost:8000/ | grep -q '<div id="root">'
+          curl -sf localhost:8000/api/spots | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const j=JSON.parse(d);const n=(j.Spots||[]).length;console.log(n+' spots');if(!n)process.exit(1)})"
+      - name: Demo login works
+        run: |
+          curl -s -c jar -b jar localhost:8000/ > /dev/null
+          TOKEN=$(grep XSRF-TOKEN jar | awk '{print $7}')
+          curl -sf -c jar -b jar -H "Content-Type: application/json" -H "XSRF-Token: $TOKEN" \
+            -d '{"credential":"Rich-Guy","password":"password"}' localhost:8000/api/session | grep -q '"user"'
+      - name: Server log
+        if: always()
+        run: cat server.log || true

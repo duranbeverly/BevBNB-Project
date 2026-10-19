@@ -3,7 +3,7 @@ import React from "react";
 
 import "./index.css";
 
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ModalProvider, Modal } from "./context/Modal";
@@ -15,7 +15,7 @@ import * as sessionActions from "./store/session";
 
 const store = configureStore();
 
-if (process.env.NODE_ENV !== "production") {
+if (import.meta.env.DEV) {
   restoreCSRF();
 
   window.csrfFetch = csrfFetch;
@@ -39,9 +39,8 @@ function Root() {
   );
 }
 
-ReactDOM.render(
+createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Root />
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

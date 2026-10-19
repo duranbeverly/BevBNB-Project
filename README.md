@@ -12,7 +12,21 @@
   - [Contact](#contact)
 
 ## About
-BevBnB is an application for booking some very unique spots in the United States, that centers on bringing people back to nature and away from the hustle and bustle of busy city lives. My site is live on https://bevbnb.onrender.com
+BevBnB is an application for booking some very unique spots in the United States, that centers on bringing people back to nature and away from the hustle and bustle of busy city lives.
+
+**Live demo:** https://bevbnb.onrender.com (use **Demo User** on the login screen; the free server can take up to a minute to wake up).
+
+### 2026 update
+- Front end moved from Create React App to **Vite** and React 18's `createRoot`.
+- Continuous integration on GitHub Actions: builds the app, migrates and seeds a real Postgres database, and checks the home page, the spots API and the demo login on every push.
+- One-click deploy with `render.yaml` (Render free web service + Neon free Postgres).
+
+### Run it locally
+```bash
+npm install
+cd backend && cp .env.example .env && npx dotenv sequelize db:migrate && npx dotenv sequelize db:seed:all && npm start
+cd frontend && npm run dev   # http://localhost:3000
+```
 
 ## Technologies
 React/Redux CSS
