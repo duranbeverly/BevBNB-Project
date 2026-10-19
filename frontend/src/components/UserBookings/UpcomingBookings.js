@@ -1,42 +1,26 @@
 import { img } from "../../utils/img";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllSpots } from "../../store/spots";
-import { useEffect } from "react";
-import { getReviewsCurrentThunk } from "../../store/reviews";
-import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
-import CreateReview from "../Reviews/CreateReview";
+import { formatBookingDate } from "../../utils/dates";
 import DeleteBookingModal from "../DeleteBookingModal";
 import { useHistory } from "react-router-dom"
 import OpenModalButton from "../OpenModalButton";
 import "./UpcomingBookings.css"
 
 export default function UpcomingBookings({ booking, future }) {
-    const dispatch = useDispatch();
     const history = useHistory()
-    useEffect(() => {
-        dispatch(getAllSpots()).then(dispatch(getReviewsCurrentThunk()))
-    }, [dispatch])
 
     let spot = booking.Spot;
-    let allSpots = Object.values(useSelector((state) => state.spots.allSpots))
-    let preview = allSpots.find(spot => spot.id === booking.spotId)
-    if (preview) {
-        preview = preview.previewImage;
-    }
+    // the bookings API already includes the spot's preview photo
+    let preview = spot?.previewImage || spot?.SpotImages?.find(image => image.preview)?.url || spot?.SpotImages?.[0]?.url;
     let startDate = booking.startDate
     let endDate = booking.endDate
-    let user = useSelector((state) => state.session.user)
-    let userSpotReview = Object.values(useSelector((state) => state.review.user))
-    if (user) {
-        userSpotReview = userSpotReview.filter((review) => review.userId === user.id && review.spotId === booking.spotId)
-    }
-    let userReviewed = userSpotReview.length;
+    // same rule as the API: once a stay has started it can't be cancelled
+    let canCancel = new Date(startDate) > new Date()
 
-    if (!spot) return <div>...Loading</div>
+    if (!spot) return <div>Loading...</div>
 
     return (
         <div className="future-trip-card">
-            <img src={img(preview, 600)} loading="lazy"
+            <img src={img(preview, 600)} alt={spot.name} loading="lazy"
                 onClick={() => history.push(`/spots/${spot.id}`)}
             />
 
@@ -56,28 +40,24 @@ export default function UpcomingBookings({ booking, future }) {
                             <div className="booking-dates">
                                 <p>Reservation begins:
                                     <span> </span>
-                                    {new Date(startDate).toLocaleDateString("en-US", {
-                                        month: "long",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
+                                    {formatBookingDate(startDate)}
 
                                 </p>
                             </div>
                             <div className="booking-dates">
                                 <p>Ends:
                                     <span> </span>
-                                    {new Date(endDate).toLocaleDateString("en-US", {
-                                        month: "long",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
+                                    {formatBookingDate(endDate)}
                                 </p>
                             </div>
-                            <OpenModalButton
-                                buttonText="Cancel booking"
-                                modalComponent={<DeleteBookingModal bookingId={booking.id} />}
-                            />
+                            {canCancel ? (
+                                <OpenModalButton
+                                    buttonText="Cancel booking"
+                                    modalComponent={<DeleteBookingModal bookingId={booking.id} />}
+                                />
+                            ) : (
+                                <p className="trip-in-progress">Your stay is in progress</p>
+                            )}
                         </div>
                     )}
                 </div>

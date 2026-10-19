@@ -51,6 +51,26 @@ jobs:
           TOKEN=$(grep XSRF-TOKEN jar | awk '{print $7}')
           curl -sf -c jar -b jar -H "Content-Type: application/json" -H "XSRF-Token: $TOKEN" \
             -d '{"credential":"Rich-Guy","password":"password"}' localhost:8000/api/session | grep -q '"user"'
+      - name: Book and cancel a stay
+        run: |
+          # still logged in as Rich-Guy from the step above (cookies are in the jar)
+          TOKEN=$(grep XSRF-TOKEN jar | awk '{print $7}')
+          START=$(date -u -d '+5 days' +%F)
+          END=$(date -u -d '+8 days' +%F)
+          # spot 3 is owned by FakeUser1, so Rich-Guy can book it
+          BOOKING=$(curl -sf -c jar -b jar -H "Content-Type: application/json" -H "XSRF-Token: $TOKEN" \
+            -d "{\"startDate\":\"$START\",\"endDate\":\"$END\"}" localhost:8000/api/spots/3/bookings)
+          echo "created: $BOOKING"
+          ID=$(echo "$BOOKING" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const id=JSON.parse(d).id;if(!id)process.exit(1);console.log(id)})")
+          # overlapping dates must be refused
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' -c jar -b jar -H "Content-Type: application/json" -H "XSRF-Token: $TOKEN" \
+            -d "{\"startDate\":\"$START\",\"endDate\":\"$END\"}" localhost:8000/api/spots/3/bookings)
+          echo "overlap: $CODE"; test "$CODE" = 403
+          CODE=$(curl -s -o cancel.json -w '%{http_code}' -X DELETE -c jar -b jar -H "XSRF-Token: $TOKEN" localhost:8000/api/bookings/$ID)
+          echo "cancel: $CODE $(cat cancel.json)"; test "$CODE" = 200
+          curl -sf -b jar localhost:8000/api/bookings/current | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{if(JSON.parse(d).Bookings.some(b=>b.id==$ID)){console.log('booking still listed');process.exit(1)}})"
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' -X DELETE -c jar -b jar -H "XSRF-Token: $TOKEN" localhost:8000/api/bookings/$ID)
+          echo "cancel again: $CODE"; test "$CODE" = 404
       - name: Server log
         if: always()
         run: cat server.log || true

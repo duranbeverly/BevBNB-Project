@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { getUserBookingsThunk } from "../../store/bookings";
+import { getReviewsCurrentThunk } from "../../store/reviews";
 import UpcomingBookings from "./UpcomingBookings";
 import { useHistory } from "react-router-dom";
 import "./UserBookings.css"
 import PastBookings from "./PastBookings";
-import DeleteBookingModal from "../DeleteBookingModal";
 
 
 
@@ -13,19 +13,23 @@ export default function UserBookings() {
     const dispatch = useDispatch();
     const history = useHistory()
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const user = useSelector(state => state.session.user)
     const userBookings = Object.values(useSelector(state => state.bookings.user))
-    console.log("user Bookings here: ", userBookings) 
 
     useEffect(() => {
-        dispatch(getUserBookingsThunk()).then(() => {
-            setLoading(false)
-        })
-    }, [dispatch])
+        if (!user) return history.push('/')
+        dispatch(getReviewsCurrentThunk()).catch(() => { })
+        dispatch(getUserBookingsThunk())
+            .catch(() => setError("We couldn't load your trips. Please refresh and try again."))
+            .finally(() => setLoading(false))
+    }, [dispatch, user, history])
 
     let currentDate = new Date(new Date().setHours(0, 0, 0, 0))
+    // a trip stays "upcoming" until it ends, so stays in progress don't vanish from both lists
     let futureBookings = userBookings
         .filter(booking => {
-            let date = new Date(booking.startDate)
+            let date = new Date(booking.endDate)
             return date >= currentDate
         })
         .sort((a, b) => {
@@ -33,8 +37,6 @@ export default function UserBookings() {
             let bStart = new Date(b.startDate)
             return aStart - bStart
         })
-
-    console.log("future bookings", futureBookings)
 
     let pastBookings = userBookings
         .filter(booking => {
@@ -49,11 +51,13 @@ export default function UserBookings() {
 
 
 
-    if (loading) return <div><h1>...Loading</h1></div>
+    if (!user) return null
+    if (loading) return <div className="trips-wrapper"><h1>Loading...</h1></div>
 
     return (
         <div className="trips-wrapper">
             <h1>Trips</h1>
+            {error && <p className="errors trips-error">{error}</p>}
             <div className="upcoming-trip-div">
                 <h2> Upcoming Trips</h2>
                 {futureBookings.length < 1 && (

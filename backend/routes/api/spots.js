@@ -18,7 +18,7 @@ const validateSpot = [
         .withMessage('City is required.'),
     check('state')
         .exists({ checkFalsy: true })
-        .withMessage('State ks required.'),
+        .withMessage('State is required.'),
     check('country')
         .exists({ checkFalsy: true })
         .withMessage('Country is required.'),
@@ -357,29 +357,6 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     res.json(spotToEdit)
 })
 
-router.delete(':spotId', requireAuth, async (req, res) => {
-    const { user } = req
-    const id = req.params.spotId
-    let spot = await Spot.findByPk(id)
-
-    if (!spotToEdit) {
-        return res.status(404).json({
-            "message": "Spot couldn't be found"
-        });
-    }
-
-    if (spotToEdit.ownerId !== user.id) {
-        return res.status(401).json({
-            "message": "You are not authorized to edit this spot"
-        });
-    }
-
-    await spot.destroy()
-    res.json({
-        "message": "Successfully deleted"
-    })
-})
-
 //get reviews by spot id
 
 router.get('/:spotId/reviews', async (req, res, next) => {
@@ -509,41 +486,49 @@ router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, nex
         })
     }
 
-    //look for the bookings that have either the same start date or have
-
-    const overlappingBooking = await Booking.findOne({
-        where: {
-            spotId: id,
-            [Op.or]: [
-                {
-                    startDate: {
-                        [Op.between]: [startDate, endDate]
-                    }
-                },
-                {
-                    endDate: {
-                        [Op.between]: [startDate, endDate]
-                    }
-                }
-            ]
-        }
-    });
+    if (isNaN(new Date(startDate)) || isNaN(new Date(endDate))) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "startDate": "Please pick valid dates"
+            }
+        });
+    }
 
     if (new Date(endDate) <= new Date(startDate)) {
         return res.status(400).json({
             "message": "Bad Request",
             "errors": {
-                "endDate": "endDate cannot be on or before startDate"
+                "endDate": "Check-out must be after check-in"
             }
         });
     }
+
+    // allow a day of slack so "today" still works for guests west of UTC
+    if (new Date(startDate) < new Date(Date.now() - 24 * 60 * 60 * 1000)) {
+        return res.status(400).json({
+            "message": "Bad Request",
+            "errors": {
+                "startDate": "Check-in can't be in the past"
+            }
+        });
+    }
+
+    //two stays overlap when each one starts before the other ends (back-to-back stays are fine)
+    const overlappingBooking = await Booking.findOne({
+        where: {
+            spotId: spot.id,
+            startDate: { [Op.lt]: new Date(endDate) },
+            endDate: { [Op.gt]: new Date(startDate) }
+        }
+    });
 
     if (overlappingBooking) {
         return res.status(403).json({
             "message": "Sorry, this spot is already booked for the specified dates",
             "errors": {
-                "startDate": "Start date conflicts with an existing booking",
-                "endDate": "End date conflicts with an existing booking"
+                "startDate": "Those dates overlap an existing booking",
+                "endDate": "Those dates overlap an existing booking"
             }
         });
     }
@@ -563,7 +548,7 @@ router.post('/:spotId/bookings', requireAuth, validateDate, async (req, res, nex
     }
 })
 
-//delete a booking
+//delete a spot
 router.delete('/:spotId', requireAuth, async (req, res) => {
     let { user } = req;
     let id = req.params.spotId;
@@ -581,9 +566,8 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
             "message": "Successfully deleted"
         })
     } else {
-        return res.status(404).json({
-            "message": "You are not authorized to delete this booking."
-
+        return res.status(403).json({
+            "message": "You can only delete your own spots."
         })
     }
 })

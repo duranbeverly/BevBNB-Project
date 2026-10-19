@@ -3,7 +3,7 @@ export const LOAD_BOOKINGS = "bookings/LOAD_BOOKINGS"
 export const CREATE_BOOKING = "bookings/CREATE_BOOKING"
 export const USER_BOOKINGS = "bookings/USER_BOOKINGS"
 export const EDIT_BOOKING = "bookings/EDIT_BOOKING"
-export const DELETE_BOOKING = "bookings_DELETE_BOOKING"
+export const DELETE_BOOKING = "bookings/DELETE_BOOKING"
 
 
 export const loadBookings = (id, data) => {
@@ -40,12 +40,27 @@ export const deleteBooking = (id) => {
 export const getBookingsThunk = (id) => async dispatch => {
     const response = await csrfFetch(`/api/spots/${id}/bookings`)
     const data = await response.json()
-    dispatch(loadBookings(data, id))
+    dispatch(loadBookings(id, data))
     return data;
 }
 
+// csrfFetch throws the Response on 4xx/5xx; turn that into an Error with a sentence a person can read
+export const readableError = async (res, fallback) => {
+    let message = fallback;
+    try {
+        const body = await res.json();
+        const fieldErrors = body.errors ? Object.values(body.errors) : [];
+        message = (body.errors && body.errors.message) || fieldErrors[0] || body.message || fallback;
+        if (res.status === 401) message = "Please log in and try again.";
+        const err = new Error(message);
+        err.errors = body.errors || {};
+        return err;
+    } catch (e) {
+        return Object.assign(new Error(message), { errors: {} });
+    }
+}
+
 export const createBookingThunk = (id, data) => async dispatch => {
-    console.log("in thunk ", id, data)
     const response = await csrfFetch(`/api/spots/${id}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -74,10 +89,14 @@ export const editBookingThunk = (id, data) => async dispatch => {
 }
 
 export const deleteBookingThunk = (id) => async dispatch => {
-    const response = await csrfFetch(`/api/bookings/${id}`, {
-        method: "DELETE",
-    })
-    const data = await response.json();
+    try {
+        await csrfFetch(`/api/bookings/${id}`, {
+            method: "DELETE",
+        })
+    } catch (res) {
+        if (!(res instanceof Response)) throw new Error("Couldn't reach the server. Please try again.");
+        throw await readableError(res, "Something went wrong cancelling this booking. Please try again.");
+    }
     dispatch(deleteBooking(id))
 }
 
@@ -91,9 +110,7 @@ export default function bookingsReducer(state = initialState, action) {
             newState = { ...state }
             newState.spot = { ...newState.spot }
             newState.user = { ...newState.user }
-            action.data.Bookings.forEach(booking => {
-                newState.spot[action.id] = booking;
-            })
+            newState.spot[action.id] = action.data.Bookings || action.data.allBookings || [];
             return newState;
         case USER_BOOKINGS:
             newState = { ...state }
@@ -107,7 +124,6 @@ export default function bookingsReducer(state = initialState, action) {
             newState = { ...state }
             newState.spot = { ...newState.spot }
             newState.user = { ...newState.user }
-            newState.spot[action.data.id] = action.data
             newState.user[action.data.id] = action.data
             return newState;
 
@@ -116,7 +132,6 @@ export default function bookingsReducer(state = initialState, action) {
             newState.spot = { ...newState.spot }
             newState.user = { ...newState.user }
             delete newState.user[action.id]
-            delete newState.spot[action.id]
             return newState;
 
         default:

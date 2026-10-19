@@ -63,3 +63,7 @@
         padding: .5rem 0;
     }
 }
+
+.trips-error {
+    font-size: 14px;
+}

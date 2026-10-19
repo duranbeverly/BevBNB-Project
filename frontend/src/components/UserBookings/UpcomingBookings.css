@@ -36,3 +36,8 @@
         border-radius: 10px 10px 0 0;
     }
 }
+
+.trip-in-progress {
+    font-weight: bold;
+    margin: 0;
+}

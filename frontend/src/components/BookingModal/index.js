@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal"
 import { useHistory } from "react-router-dom";
 import DatePicker from "react-datepicker";
-import { createBookingThunk, getUserBookingsThunk } from "../../store/bookings";
+import { createBookingThunk, getUserBookingsThunk, readableError } from "../../store/bookings";
+import { toDateOnly } from "../../utils/dates";
 import "./BookingModal.css"
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -36,39 +37,25 @@ export default function BookingModal({ spot }) {
         setHasSubmitted(true)
         e.preventDefault();
 
-        if (Object.values(errors).length) return;
-        console.log("do we have an id?", spot.id)
-        console.log("type of id ", typeof (spot.id))
+        if (!startDate || !endDate) return;
 
-        dispatch(createBookingThunk(spot.id, { startDate, endDate })).then(dispatch(getUserBookingsThunk())).then(closeModal)
-            .then(() => history.push('/bookings'))
+        dispatch(createBookingThunk(spot.id, { startDate: toDateOnly(startDate), endDate: toDateOnly(endDate) }))
+            .then(() => dispatch(getUserBookingsThunk()))
+            .then(() => {
+                closeModal()
+                history.push('/bookings')
+            })
             .catch(async (res) => {
-                let error = await res.json()
-                console.log("what is res", error)
-                error = error.errors;
+                const error = res instanceof Response
+                    ? await readableError(res, "Something went wrong booking this spot. Please try again.")
+                    : Object.assign(new Error("Couldn't reach the server. Please try again."), { errors: {} });
 
                 let newErrors = {};
-                if (error && error.message === "Authentication required") {
-                    newErrors.message = "You must be logged in to request a booking"
-                }
-                if (error && error.endDate) {
-                    newErrors.end = error.endDate;
-
-                }
-                if (error && error.startDate) {
-
-                    newErrors.start = error.startDate;
-                }
-                if (!error) {
-
-                    newErrors.message = "You can not book a reservation for your own spot."
-                }
+                if (error.errors.startDate) newErrors.start = error.errors.startDate;
+                if (error.errors.endDate) newErrors.end = error.errors.endDate;
+                if (!newErrors.start && !newErrors.end) newErrors.message = error.message;
                 setErrors(newErrors);
-                return
             })
-
-
-
     }
 
 
@@ -86,6 +73,7 @@ export default function BookingModal({ spot }) {
                     selected={startDate}
                     className="date-input"
                     onChange={(date) => setStartDate(date)}
+                    minDate={new Date()}
                 />
                 <i className="fa-regular fa-calendar"></i>
             </label>

@@ -136,33 +136,29 @@ router.delete('/:bookingId', requireAuth, async (req, res) => {
 
     if (!booking) {
         return res.status(404).json({
-            "message": "Booking couldn't be found"
-        })
-    }
-
-    if (booking.startDate <= new Date()) {
-        return res.status(403).json({
-            "message": "Bookings that have been started can't be deleted"
+            "message": "We couldn't find that booking. It may have already been cancelled."
         })
     }
 
     let spot = await Spot.findByPk(booking.spotId)
 
-
-    if (user.id === booking.userId || user.id === spot.ownerId) {
-        await booking.destroy()
-        res.json({
-            "message": "Successfully deleted"
-        })
-    }
-    else {
-        return res.status(404).json({
-            "message": "You are not authorized to delete this booking."
-
+    if (user.id !== booking.userId && (!spot || user.id !== spot.ownerId)) {
+        return res.status(403).json({
+            "message": "You can only cancel your own bookings."
         })
     }
 
+    if (new Date(booking.startDate) <= new Date()) {
+        return res.status(403).json({
+            "message": "This trip has already started, so it can't be cancelled."
+        })
+    }
 
+    await booking.destroy()
+    res.json({
+        "message": "Successfully deleted",
+        "id": booking.id
+    })
 })
 
 module.exports = router;
