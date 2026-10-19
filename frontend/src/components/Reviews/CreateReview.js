@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { createReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
 import { getSingleSpot } from '../../store/spots';
+import { readableError } from "../../store/bookings";
 import "./CreateReview.css"
 
 function CreateReview({ spot, user, spotId }) {
@@ -46,8 +47,11 @@ function CreateReview({ spot, user, spotId }) {
                     setErrors({});
                     setActiveRating(0);
                 })
-                .catch(error => {
-                    setServerError(error.message)
+                .catch(async error => {
+                    const err = error instanceof Response
+                        ? await readableError(error, "Something went wrong posting your review. Please try again.")
+                        : error;
+                    setServerError(err.message)
                 })
         }
 

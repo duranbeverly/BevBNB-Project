@@ -18,10 +18,8 @@ function LoginFormModal() {
         return dispatch(sessionActions.login({ credential, password }))
             .then(closeModal)
             .catch(async (res) => {
-                const data = await res.json();
-                if (data && data.errors) {
-                    setErrors(data.errors);
-                }
+                const data = await res.json().catch(() => ({}));
+                setErrors(data && data.errors ? data.errors : { credential: "Something went wrong logging in. Please try again." });
             });
     };
 

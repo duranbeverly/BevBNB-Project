@@ -1,63 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { Link } from "react-router-dom";
-import { getCurrentUserSpots } from "../../store/spots";
 import { useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
     const history = useHistory()
-    const spotsObj = useSelector(state => state.spots.allSpots) //getting from single state (clears out when you refresh page)
-    const currentUsersSpots = useSelector(state => state.spots.currentUserSpots)
-    const spots = Object.values(spotsObj)
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const ulRef = useRef();
-    const [isLoading, setIsLoading] = useState(true)
 
-    const [hasSpots, setHasSpots] = useState(false)
-    const [hasNoSpots, setHasNoSpots] = useState(false)
-
-    // .then(() => {setLoading(false)}
-    //
-    let hasSpotsAlready = [];
-
-    useEffect(() => {
-
-        if (!user) {
-            setHasSpots(false)
-        } else {
-            let dataSpots = dispatch(getCurrentUserSpots()).then((data) => {
-                if (Object.values(data)[0].length > 0) {
-                    //don't need to rely on filter can just get the fetch
-                    //this could be an issue later on
-                    setHasSpots(true) //these guys will just see create a new spot
-                } else {
-                    setHasSpots(false)
-                }
-
-            })
-
-        }
-
-        //if the new user has spots or if the hasSpots is true then create a slice of state / fetch current user spots if not then do nothing reset the slice of state to zero on re-render
-        //if there is no user clear the slice of state that has their
-        //each page should be able to handle its own data
-    }, [dispatch, user])
-
-    const openMenu = () => {
-        if (showMenu) return;
-        setShowMenu(true);
+    // stopPropagation keeps this click from reaching the document "click outside" listener below.
+    // React 18 attaches that listener during the same click, so without it the menu closed as soon as it opened.
+    const toggleMenu = (e) => {
+        e.stopPropagation();
+        setShowMenu(prev => !prev);
     };
 
     useEffect(() => {
         if (!showMenu) return;
 
         const closeMenu = (e) => {
-            if (!ulRef.current.contains(e.target)) {
+            if (ulRef.current && !ulRef.current.contains(e.target)) {
                 setShowMenu(false);
             }
         };
@@ -71,10 +38,14 @@ function ProfileButton({ user }) {
 
     const logout = (e) => {
         e.preventDefault();
-        dispatch(sessionActions.logout())
-        history.push('/')
-
         closeMenu();
+        dispatch(sessionActions.logout()).then(() => history.push('/'))
+    };
+
+    const demoLogin = (e) => {
+        e.preventDefault();
+        closeMenu();
+        dispatch(sessionActions.login({ credential: "Rich-Guy", password: "password" }))
     };
 
 
@@ -83,7 +54,7 @@ function ProfileButton({ user }) {
 
     return (
         <>
-            <button className="navButton" onClick={openMenu}>
+            <button className="navButton" onClick={toggleMenu} aria-label="Account menu" aria-expanded={showMenu}>
                 <i className="fa-solid fa-bars"></i>
                 <i className="fas fa-user-circle" />
             </button>
@@ -92,7 +63,7 @@ function ProfileButton({ user }) {
                     <>
                         <li className="log-in">Hello, {user.firstName}</li>
                         <li className="log-in line">{user.email}</li>
-                        {hasSpots && <li className="log-in line"><Link to='/spots/current' onClick={closeMenu}>Manage Spots</Link></li>}
+                        <li className="log-in line"><Link to='/spots/current' onClick={closeMenu}>Manage Spots</Link></li>
                         <li className="log-in line"><Link to='/bookings' onClick={closeMenu}>Trips</Link></li>
                         <li className="log-in-button">
                             <button className="logout-button" onClick={logout}>Log Out</button>
@@ -111,6 +82,7 @@ function ProfileButton({ user }) {
                             onItemClick={closeMenu}
                             modalComponent={<SignupFormModal />}
                         />
+                        <li className="demo-user" onClick={demoLogin}>Demo User</li>
 
                     </>
                 )}

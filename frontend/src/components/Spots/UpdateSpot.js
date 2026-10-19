@@ -30,11 +30,16 @@ export const UpdateSpot = () => {
     const [imageUrl4, setImageUrl4] = useState('');
     const [submitted, setSubmitted] = useState(false)
     const [errors, setErrors] = useState({});
+    const [existingImages, setExistingImages] = useState([]);
+    const user = useSelector(state => state.session.user);
     const dispatch = useDispatch()
     const history = useHistory()
 
     useEffect(() => {
         dispatch(getSingleSpot(spotId)).then((spot) => {
+            // only the owner can edit; anyone else (or a missing spot) goes back to the listing
+            if (!spot || !spot.id || !user || spot.ownerId !== user.id) return history.push(spot && spot.id ? `/spots/${spotId}` : '/')
+            setExistingImages(spot.SpotImages.map(image => image.url))
             setCountry(spot.country);
             setAddress(spot.address);
             setCity(spot.city);
@@ -50,7 +55,7 @@ export const UpdateSpot = () => {
             spot.SpotImages[3] && setImageUrl3(spot.SpotImages[3].url)
             spot.SpotImages[4] && setImageUrl4(spot.SpotImages[4].url)
         })
-    }, [dispatch, spotId])
+    }, [dispatch, spotId, user, history])
 
     useEffect(() => {
         let errors = {}
@@ -60,7 +65,11 @@ export const UpdateSpot = () => {
         if (state.length < 1) errors.state = "State is required"
         if (description.length < 30) errors.description = "Description should be at least 30 characters"
         if (name.length < 1) errors.name = "Name of spot is required"
-        if (price.length < 1) errors.price = "Price is required"
+        if (String(price).length < 1) errors.price = "Price is required"
+        else if (isNaN(price) || Number(price) <= 0) errors.price = "Price must be a number greater than 0"
+        if (name.length > 50) errors.name = "Name must be less than 50 characters"
+        if (lat === '' || isNaN(lat) || Number(lat) < -90 || Number(lat) > 90) errors.lat = "Latitude must be between -90 and 90"
+        if (lng === '' || isNaN(lng) || Number(lng) < -180 || Number(lng) > 180) errors.lng = "Longitude must be between -180 and 180"
         if (previewImage.length > 0 && !previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) {
             errors.previewImage = "Preview image URL must end in .png, .jpg, or .jpeg"
         }
@@ -74,16 +83,16 @@ export const UpdateSpot = () => {
             errors.imageUrl3 = "Image URL 3 must end in .png, .jpg, or .jpeg"
         }
         if (imageUrl4.length > 0 && !imageUrl4.endsWith('.png') && !imageUrl4.endsWith('.jpg') && !imageUrl4.endsWith('.jpeg')) {
-            errors.imageUrl4 = "Image URL 3 must end in .png, .jpg, or .jpeg"
+            errors.imageUrl4 = "Image URL 4 must end in .png, .jpg, or .jpeg"
         }
 
         setErrors(errors)
-    }, [country, address, city, state, lat, lng, description, name, price, previewImage])
+    }, [country, address, city, state, lat, lng, description, name, price, previewImage, imageUrl1, imageUrl2, imageUrl3, imageUrl4])
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(!submitted)
+        setSubmitted(true)
 
         if (Object.values(errors).length < 1) {
 
@@ -98,9 +107,14 @@ export const UpdateSpot = () => {
                 description,
                 price
             }
-            let spotId2 = await dispatch(editSpot(spotId, spot))
-
-            handleImages(spotId)
+            try {
+                await dispatch(editSpot(spotId, spot))
+                await handleImages(spotId)
+            } catch (res) {
+                const data = res instanceof Response ? await res.json().catch(() => ({})) : {}
+                setErrors({ ...errors, ...(data.errors || {}) })
+                if (!data.errors) alert("Something went wrong updating your spot. Please try again.")
+            }
 
 
 
@@ -122,17 +136,14 @@ export const UpdateSpot = () => {
 
         for (let i = 0; i < images.length; i++) {
             let url = images[i]
+            // the spot already has these photos; re-posting them duplicated every image on each update
+            if (existingImages.includes(url)) continue
             let image = {
                 url,
                 preview: (i === 0)
             }
             await dispatch(createSpotImage(image, spotId))
         }
-
-        history.push(`/spots/${spotId}`);
-
-
-
 
         history.push(`/spots/${spotId}`)
         //remember 4 images are optional so you will have to handle that at some point
@@ -180,7 +191,7 @@ export const UpdateSpot = () => {
                     </div>
                     <div className='city-state'>
                         <div className='city'>
-                            <label className="signup-label">lat:{submitted && <span className='errors'>{errors.lat}</span>}
+                            <label className="signup-label">Latitude:{submitted && <span className='errors'>{errors.lat}</span>}
                                 <input className="input-area-spots" type="text" id="lat" name="lat"
                                     value={lat} onChange={e => setLat(e.target.value)}
                                 />
@@ -188,7 +199,7 @@ export const UpdateSpot = () => {
                             </label>
                         </div>
                         <div className='city'>
-                            <label className="signup-label">lng:{submitted && <span className='errors'>{errors.lng}</span>}
+                            <label className="signup-label">Longitude:{submitted && <span className='errors'>{errors.lng}</span>}
                                 <input className="input-area-spots" type="text" id="lng" name="lng"
                                     value={lng} onChange={e => setLng(e.target.value)}
                                 />

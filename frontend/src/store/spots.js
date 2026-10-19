@@ -173,22 +173,22 @@ export const spotsReducer = (state = { allSpots: {}, currentUserSpots: {} }, act
             return newState
         }
         case RECEIVE_SPOT: {
-            const newState = { ...state, allSpots: { ...state, [action.spot.id]: action.spot } };
+            const newState = { ...state, allSpots: { ...state.allSpots, [action.spot.id]: action.spot } };
             return newState
         }
         case ADD_SPOT: {
-            const newState = { ...state, allSpots: { ...state, [action.spot.id]: action.spot } };
+            const newState = { ...state, allSpots: { ...state.allSpots, [action.spot.id]: action.spot } };
             return newState
         }
         case ADD_SPOT_IMAGE: {
-            const newSingleSpots = { ...state.singleSpots };
-            if (newSingleSpots[action.spotId]) {
-                newSingleSpots[action.spotId].SpotImages = [...newSingleSpots[action.spotId].SpotImages, action.image];
-            }
-            return { ...state, currentUserSpots: newSingleSpots };
+            const spot = state.allSpots[action.image.spotId];
+            if (!spot) return state;
+            const SpotImages = [...(spot.SpotImages || []), action.image];
+            return { ...state, allSpots: { ...state.allSpots, [spot.id]: { ...spot, SpotImages } } };
         }
         case GET_CURRENT_SPOTS: {
-            const newState = { ...state, allSpots: { ...state.allSpots }, currentUserSpots: { ...state.currentUserSpots } };
+            // replace rather than merge, so a previous user's (or a deleted) spot never lingers
+            const newState = { ...state, allSpots: { ...state.allSpots }, currentUserSpots: {} };
             action.spots.Spots.forEach((spot) => {
                 newState.currentUserSpots[spot.id] = spot;
             });

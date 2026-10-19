@@ -6,7 +6,6 @@ import ProfileButton from './ProfileButton';
 import logo from './Assets/BevBnb.png'
 import './Navigation.css';
 import { Link } from 'react-router-dom';
-import { CreateSpot } from '../Spots/CreateSpot';
 
 function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
@@ -16,7 +15,7 @@ function Navigation({ isLoaded }) {
             <li className='navLi'>
 
                 <NavLink exact to="/">
-                    <img className="logo" src={logo} />
+                    <img className="logo" src={logo} alt="BevBnB home" />
                 </NavLink>
             </li>
             {isLoaded && (

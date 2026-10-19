@@ -29,11 +29,9 @@ export const CurrentSpots = () => {
             dispatch(getCurrentUserSpots())
                 .then((data) => {
                     setFetchedData(data); // update the state variable with the fetched data
-                    setTimeout(() => {
-                        setLoading(false);
-                    }, 1000);
                 })
-                .catch((err) => console.error(err));
+                .catch(() => { })
+                .finally(() => setLoading(false));
 
         }
 
@@ -56,6 +54,9 @@ export const CurrentSpots = () => {
     return (
         <>
             <h2 className="manage-title">Manage Spots</h2>
+            {currentSpots.length === 0 && (
+                <p className="manage-title">You haven't listed any spots yet. <Link to='/spots/new'>Create a new spot</Link></p>
+            )}
             <div className='body-spots'>
                 {currentSpots.map((currentSpot) => (
                     <CurrentSpotInfo currentSpot={currentSpot} key={currentSpot.id} />

@@ -61,6 +61,7 @@
     color: #51636D;
     background-color: rgb(255, 255, 255);
     box-shadow: 5px 5px 5px rgb(198, 198, 198);
+    z-index: 10;
 
 
 }
@@ -72,6 +73,13 @@
 
 .sign-up {
     background-color: white;
+    margin-bottom: 8px;
+}
+
+.demo-user {
+    background-color: white;
+    border-top: #51636d6b 1px solid;
+    padding-top: 8px;
 }
 
 .logout-button {

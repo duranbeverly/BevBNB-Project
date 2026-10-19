@@ -38,9 +38,13 @@ function SignupFormModal() {
             )
                 .then(closeModal)
                 .catch(async (res) => {
-                    const data = await res.json();
+                    const data = await res.json().catch(() => ({}));
                     if (data && data.errors) {
-                        setErrors(data.errors);
+                        // the database reports duplicates as "email must be unique"
+                        const errors = { ...data.errors };
+                        if (/unique/i.test(errors.email || "")) errors.email = "That email is already in use";
+                        if (/unique/i.test(errors.username || "")) errors.username = "That username is taken";
+                        setErrors(errors);
                     }
                 });
         }
@@ -107,7 +111,7 @@ function SignupFormModal() {
                                 if (!newUsername || newUsername.length < 4 || newUsername.length > 20) {
                                     setErrors(prev => {
                                         let err = { ...prev };
-                                        err.username = "Not a valid username";
+                                        err.username = "Must be 4-20 characters";
                                         setDisabled(true);
                                         return err;
                                     })
@@ -164,10 +168,10 @@ function SignupFormModal() {
                             value={password}
                             onChange={(e) => {
                                 let password = e.target.value.trim();
-                                if (!password || password.length < 5 || password.length > 20) {
+                                if (!password || password.length < 6 || password.length > 20) {
                                     setErrors((prev) => {
                                         let err = { ...prev };
-                                        err.password = "Not a valid password";
+                                        err.password = "Must be 6-20 characters";
                                         setDisabled(true);
                                         return err;
                                     });
@@ -198,10 +202,10 @@ function SignupFormModal() {
                             value={confirmPassword}
                             onChange={(e) => {
                                 let password2 = e.target.value.trim()
-                                if (password2 !== password) {
+                                if (e.target.value !== password) {
                                     setErrors(prev => {
                                         let err = { ...prev }
-                                        err.confirmPassword = "passwords don't match"
+                                        err.confirmPassword = "Passwords don't match"
                                         setDisabled(true)
                                         return err
                                     })
@@ -219,7 +223,7 @@ function SignupFormModal() {
                         />
                     </label>
 
-                    <button disabled={disabled} id="signupbutton" className={disabled && "disabled"} type="submit">Sign Up</button>
+                    <button disabled={disabled} id="signupbutton" className={disabled ? "disabled" : undefined} type="submit">Sign Up</button>
 
                 </form>
             </div>

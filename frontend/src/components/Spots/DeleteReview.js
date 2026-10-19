@@ -2,17 +2,22 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { deleteReview } from '../../store/reviews';
+import { getSingleSpot } from '../../store/spots';
 import "./HandleDelete.css"
 
 
-export const DeleteReview = ({ reviewId }) => {
+export const DeleteReview = ({ reviewId, spotId }) => {
     const dispatch = useDispatch();
     const { closeModal } = useModal()
 
     const handleDelete = (e) => {
         e.preventDefault();
 
-        dispatch(deleteReview(reviewId)).then(closeModal)
+        // refresh the spot too so the star average and review count drop the deleted review
+        dispatch(deleteReview(reviewId))
+            .then(() => spotId && dispatch(getSingleSpot(spotId)))
+            .then(closeModal)
+            .catch(closeModal)
     }
 
 
@@ -20,7 +25,7 @@ export const DeleteReview = ({ reviewId }) => {
         <>
             <div className="modal-delete">
                 <h2 className="delete-title">Confirm Delete</h2>
-                <h3 className="delete-question">Are you sure you want to remove this review from the listings?</h3>
+                <h3 className="delete-question">Are you sure you want to delete this review?</h3>
                 <button className="red-button" type="button" onClick={handleDelete}>Yes</button>
                 <button className="grey-button" type="button" onClick={(closeModal)}>No</button>
             </div>

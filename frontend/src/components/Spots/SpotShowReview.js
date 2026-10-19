@@ -9,12 +9,12 @@ import { DeleteReview } from './DeleteReview';
 
 //here we need to get the users with the review.userId
 
-export const SpotShowReview = ({ review, user, spot }) => {
+export const SpotShowReview = ({ review, user, spot, spotId }) => {
     if (!review) return null
     return (
         <>
 
-            <div className='single-review' key={`${review?.id}`}>
+            <div className='single-review'>
                 <h2 className='review-names'>{review.User?.firstName}</h2>
                 <p className='no-space'>{new Date(review.createdAt).toLocaleDateString()}</p>
                 <div className='review'>
@@ -22,7 +22,7 @@ export const SpotShowReview = ({ review, user, spot }) => {
                     {user?.id === review.userId &&
                         <OpenModalButton
                             buttonText="Delete"
-                            modalComponent={< DeleteReview reviewId={review.id} />}
+                            modalComponent={< DeleteReview reviewId={review.id} spotId={spotId} />}
                         />
                     }
                 </div>

@@ -142,7 +142,7 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
     let review = await Review.findByPk(id)
 
     if (!review) {
-        res.status(404).json({
+        return res.status(404).json({
             "message": "Review couldn't be found"
         })
     }
@@ -154,8 +154,8 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
         })
     }
     else {
-        return res.status(404).json({
-            "message": "You are not authorized to delete this booking."
+        return res.status(403).json({
+            "message": "You can only delete your own reviews."
         })
     }
 })

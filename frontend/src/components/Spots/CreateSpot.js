@@ -32,7 +32,11 @@ export const CreateSpot = () => {
         if (state.length < 1) errors.state = "State is required"
         if (description.length < 30) errors.description = "Description should be at least 30 characters"
         if (name.length < 1) errors.name = "Name of spot is required"
-        if (price.length < 1) errors.price = "Price is required"
+        if (String(price).length < 1) errors.price = "Price is required"
+        else if (isNaN(price) || Number(price) <= 0) errors.price = "Price must be a number greater than 0"
+        if (name.length > 50) errors.name = "Name must be less than 50 characters"
+        if (lat === '' || isNaN(lat) || Number(lat) < -90 || Number(lat) > 90) errors.lat = "Latitude must be between -90 and 90"
+        if (lng === '' || isNaN(lng) || Number(lng) < -180 || Number(lng) > 180) errors.lng = "Longitude must be between -180 and 180"
         if (previewImage.length < 1) errors.previewImage = "Preview image URL is required"
         else if (!previewImage.endsWith('.png') && !previewImage.endsWith('.jpg') && !previewImage.endsWith('.jpeg')) {
             errors.previewImage = "Preview image URL must end in .png, .jpg, or .jpeg"
@@ -47,16 +51,16 @@ export const CreateSpot = () => {
             errors.imageUrl3 = "Image URL 3 must end in .png, .jpg, or .jpeg"
         }
         if (imageUrl4.length > 0 && !imageUrl4.endsWith('.png') && !imageUrl4.endsWith('.jpg') && !imageUrl4.endsWith('.jpeg')) {
-            errors.imageUrl4 = "Image URL 3 must end in .png, .jpg, or .jpeg"
+            errors.imageUrl4 = "Image URL 4 must end in .png, .jpg, or .jpeg"
         }
 
         setErrors(errors)
-    }, [country, address, city, state, lat, lng, description, name, price, previewImage])
+    }, [country, address, city, state, lat, lng, description, name, price, previewImage, imageUrl1, imageUrl2, imageUrl3, imageUrl4])
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(!submitted)
+        setSubmitted(true)
 
         if (Object.values(errors).length < 1) {
 
@@ -71,9 +75,14 @@ export const CreateSpot = () => {
                 description,
                 price
             }
-            let spotId = await dispatch(createSpot(spot))
-
-            handleImages(spotId)
+            try {
+                let spotId = await dispatch(createSpot(spot))
+                await handleImages(spotId)
+            } catch (res) {
+                const data = res instanceof Response ? await res.json().catch(() => ({})) : {}
+                setErrors({ ...errors, ...(data.errors || {}) })
+                if (!data.errors) alert("Something went wrong creating your spot. Please try again.")
+            }
 
 
 
@@ -101,12 +110,6 @@ export const CreateSpot = () => {
             }
             await dispatch(createSpotImage(image, spotId))
         }
-
-        history.push(`/spots/${spotId}`);
-
-
-
-
 
         history.push(`/spots/${spotId}`)
         //remember 4 images are optional so you will have to handle that at some point
@@ -154,7 +157,7 @@ export const CreateSpot = () => {
                     </div>
                     <div className='city-state'>
                         <div className='city'>
-                            <label className="signup-label">lat:{submitted && <span className='errors'>{errors.lat}</span>}
+                            <label className="signup-label">Latitude:{submitted && <span className='errors'>{errors.lat}</span>}
                                 <input className="input-area-spots" type="text" id="lat" name="lat"
                                     value={lat} onChange={e => setLat(e.target.value)}
                                 />
@@ -162,7 +165,7 @@ export const CreateSpot = () => {
                             </label>
                         </div>
                         <div className='city'>
-                            <label className="signup-label">lng:{submitted && <span className='errors'>{errors.lng}</span>}
+                            <label className="signup-label">Longitude:{submitted && <span className='errors'>{errors.lng}</span>}
                                 <input className="input-area-spots" type="text" id="lng" name="lng"
                                     value={lng} onChange={e => setLng(e.target.value)}
                                 />

@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom"
 import { csrfFetch } from "./csrf"
 
 //action type constants
@@ -56,9 +55,8 @@ export const createReview = (review, spotId, user) => async (dispatch) => {
     })
     if (response.ok) {
         const data = await response.json()
-
-        dispatch(addReview(data))
         data.User = user
+        dispatch(addReview(data))
         return data
     } else {
         const data = await response.json()
@@ -91,7 +89,7 @@ export const reviewsReducer = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_REVIEWS: {
             let newState = { ...state }
-            newState.spot = { ...newState.spot }
+            newState.spot = {} // only the spot being viewed, so another spot's reviews don't show up
             newState.user = { ...newState.user }
             action.reviews.Reviews.forEach((review) => {
                 newState.spot[review.id] = review;
@@ -104,6 +102,7 @@ export const reviewsReducer = (state = initialState, action) => {
             newState.spot = { ...newState.spot }
             newState.user = { ...newState.user }
             newState.spot[action.review.id] = action.review
+            newState.user[action.review.id] = action.review
             return newState
 
         }
@@ -121,7 +120,7 @@ export const reviewsReducer = (state = initialState, action) => {
             action.data.Reviews.forEach((review) => {
                 newState.user[review.id] = review;
             })
-
+            return newState
         }
         default:
             return state
