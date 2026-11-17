@@ -94,7 +94,7 @@ p {
 
 .reserve-button {
     height: 3rem;
-    background-color: #ff5a5f;
+    background-color: #d13a42;
     color: white;
     box-shadow: 4px 3px 5px rgb(133, 117, 117);
     font-family: 'Comfortaa', cursive;
@@ -221,7 +221,7 @@ h2.title-spots {
 }
 
 .bright {
-    background-color: #ff5a5f;
+    background-color: #d13a42;
     color: white;
     border: none;
 
@@ -296,7 +296,7 @@ h2.title-spots {
 }
 
 .owner-link.primary {
-    background-color: #ff5a5f;
+    background-color: #d13a42;
     border: none;
     color: white;
 }

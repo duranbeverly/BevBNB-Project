@@ -21,6 +21,7 @@ function App() {
   return (
     <>
       <Navigation isLoaded={isLoaded} />
+      <main>
 
       {isLoaded && <Switch>
         <Route exact path='/'>
@@ -50,6 +51,7 @@ function App() {
           <h2>Page does not exist</h2>
         </Route>
       </Switch>}
+      </main>
     </>
   );
 }

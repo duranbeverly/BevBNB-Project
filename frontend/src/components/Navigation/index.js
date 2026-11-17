@@ -11,6 +11,8 @@ function Navigation({ isLoaded }) {
     const sessionUser = useSelector(state => state.session.user);
 
     return (
+        <header>
+        <nav aria-label="Main">
         <ul className='navbar'>
             <li className='navLi'>
 
@@ -31,6 +33,8 @@ function Navigation({ isLoaded }) {
                 </>
             )}
         </ul>
+        </nav>
+        </header>
     );
 }
 

@@ -17,6 +17,8 @@ export const SpotIndex = () => {
 
     return (
         <div>
+            {/* The page's main heading, for screen readers and search engines; the photos speak for themselves visually. */}
+            <h1 className='visually-hidden'>Places to stay in nature</h1>
             <div className='body-spots'>
                 {spots
                     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
